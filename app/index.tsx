@@ -1,12 +1,15 @@
+import awsConfig from '@/src/aws-exports';
+import { Amplify } from 'aws-amplify';
+import {router } from "expo-router";
 import {
-  Button,
   Image,
   Pressable,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import useLoadFonts from "./hooks/useLoadFonts";
+Amplify.configure(awsConfig);
+
 
 export default function Index() {
   const { loaded, error } = useLoadFonts();
@@ -59,7 +62,7 @@ export default function Index() {
             alignItems: "center",
             width: 292,
           })}
-          onPress={() => alert("Pressable Pressed!")}
+          onPress={() => router.push("/auth/login")}
         >
           <Text
             style={{

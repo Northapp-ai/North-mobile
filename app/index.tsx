@@ -1,12 +1,9 @@
-import {
-  Button,
-  Image,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import awsConfig from "@/src/aws-exports";
+import { Amplify } from "aws-amplify";
+import { router } from "expo-router";
+import { Image, Pressable, Text, View } from "react-native";
 import useLoadFonts from "./hooks/useLoadFonts";
+Amplify.configure(awsConfig);
 
 export default function Index() {
   const { loaded, error } = useLoadFonts();

@@ -56,7 +56,7 @@ export default function Index() {
             alignItems: "center",
             width: 292,
           })}
-          onPress={() => alert("Pressable Pressed!")}
+          onPress={() => router.push("/auth/login")}
         >
           <Text
             style={{

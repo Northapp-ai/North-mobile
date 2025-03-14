@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-northmobile-dev-ebcea-authRole",
+      "UnauthRoleArn": "arn:aws:iam::961341538611:role/amplify-northmobile-dev-ebcea-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::961341538611:role/amplify-northmobile-dev-ebcea-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-northmobile-dev-ebcea-deployment",
+      "UnauthRoleName": "amplify-northmobile-dev-ebcea-unauthRole",
+      "StackName": "amplify-northmobile-dev-ebcea",
+      "StackId": "arn:aws:cloudformation:us-east-1:961341538611:stack/amplify-northmobile-dev-ebcea/3208dea0-fac8-11ef-a8e6-12202fc0dba7",
+      "AmplifyAppId": "d2lkug7yy0f1lq"
+    },
+    "categories": {
+      "auth": {
+        "northmobile2e9eadfd": {}
+      }
+    }
+  }
+}

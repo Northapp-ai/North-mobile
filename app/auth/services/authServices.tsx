@@ -20,9 +20,9 @@ export const signUp = async (user:User) => {
       }
     });
     return result;
-  } catch (error) {
-    console.error("Error during signUp:", error);
-    throw error;
+  } catch (error: any) {
+    console.log("Error during signUp:", error);
+    throw { message: getErrorMessage(error.name) };
   }
 };
 
@@ -46,9 +46,9 @@ export const signIn = async (email: string, password: string) => {
       password
     });
     return result;
-  } catch (error) {
-    console.error("Error during signIn:", error);
-    throw error;
+  } catch (error:any) {
+    console.log("Error during signIn:", error.name);
+    throw { message: getErrorMessage(error.name) };
   }
 };
 
@@ -71,4 +71,16 @@ export const getCurrentUser = async () => {
     console.error("Error during getCurrentUser:", error);
     throw error;
   }
+};
+
+const getErrorMessage = (code: string): string => {
+  const errorMessages: { [key: string]: string } = {
+    InvalidPasswordException: "La contraseña debe tener al menos 8 caracteres con números y letras.",
+    UsernameExistsException: "Este correo ya está registrado. Intenta iniciar sesión.",
+    InvalidParameterException: "Uno o más campos no son válidos.",
+    UserNotFoundException:"Usuario y contraseña no coinciden.",
+    CodeMismatchException: "El código de verificación no es correcto.",
+  };
+
+  return errorMessages[code] ?? "No se pudo completar el registro.";
 };

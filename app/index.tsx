@@ -1,8 +1,9 @@
 import awsConfig from "@/src/aws-exports";
 import { Amplify } from "aws-amplify";
 import { router } from "expo-router";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import useLoadFonts from "./hooks/useLoadFonts";
+
 Amplify.configure(awsConfig);
 
 export default function Index() {
@@ -12,7 +13,7 @@ export default function Index() {
   }
 
   return (
-    <View style={styles.homeContainer}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={styles.homeContainer}>
       <View>
         <Image
           source={require("../assets/images/image.jpeg")}
@@ -25,15 +26,13 @@ export default function Index() {
         the age of distraction.
       </Text>
 
-      <View style={{ margin: 20 }}>
         <Pressable
           style={({ pressed }) => styles.buttonContainer}
           onPress={() => router.push("/auth/login")}
         >
           <Text style={styles.buttonText}>Get started</Text>
         </Pressable>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 

@@ -9,9 +9,8 @@ export default function RootLayout() {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        // const user = await getCurrentUser();
-        const user = undefined;
-        if (user === 0) {
+        const user = await getCurrentUser();
+        if (user) {
           console.log("User:", user);
           router.replace("/home/home");
         } else {

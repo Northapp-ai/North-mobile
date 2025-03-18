@@ -5,6 +5,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import useLoadFonts from "./hooks/useLoadFonts";
 
 Amplify.configure(awsConfig);
+console.log("Amplify configured",awsConfig);
 
 export default function Index() {
   const { loaded, error } = useLoadFonts();
@@ -13,18 +14,19 @@ export default function Index() {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={styles.homeContainer}>
-      <View>
-        <Image
-          source={require("../assets/images/image.jpeg")}
-          style={styles.image}
-        />
-      </View>
-      <Text style={styles.mainText}>
-        Welcome to North - the space to design and build your life{" "}
-        <Text style={{ fontWeight: "bold", color: "#000" }}>purpose</Text> in
-        the age of distraction.
-      </Text>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+      <View style={styles.homeContainer}>
+        <View>
+          <Image
+            source={require("../assets/images/image.jpeg")}
+            style={styles.image}
+          />
+        </View>
+        <Text style={styles.mainText}>
+          Welcome to North - the space to design and build your life{" "}
+          <Text style={{ fontWeight: "bold", color: "#000" }}>purpose</Text> in
+          the age of distraction.
+        </Text>
 
         <Pressable
           style={({ pressed }) => styles.buttonContainer}
@@ -32,6 +34,7 @@ export default function Index() {
         >
           <Text style={styles.buttonText}>Get started</Text>
         </Pressable>
+      </View>
     </ScrollView>
   );
 }

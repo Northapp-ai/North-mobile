@@ -1,13 +1,5 @@
-// import { Stack } from "expo-router";
-
-// export default function RootLayout() {
-//   return <Stack />;
-// }
-
-
-
 import { useEffect, useState } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import { Slot, Stack, useRouter } from 'expo-router';
 import { getCurrentUser } from './auth/services/authServices';
 
 export default function RootLayout() {
@@ -37,5 +29,5 @@ export default function RootLayout() {
 
   if (isLoading) return null;
 
-  return <Stack/>;
+  return <Slot/>;
 }

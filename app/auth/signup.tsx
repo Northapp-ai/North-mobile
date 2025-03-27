@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { signUp, confirmSignUp } from './services/authServices';
 import { SignUpForm } from './models/types';
@@ -15,6 +15,7 @@ const SignUp = () => {
   });
 
   const [step, setStep] = useState<'signUp' | 'confirm'>('signUp');
+
   const router = useRouter();
 
   const handleChange = (key: keyof SignUpForm, value: string) => {

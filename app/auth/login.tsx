@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { signIn } from './services/authServices';
+import { getCurrentUser, signIn } from './services/authServices';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [msgError, setmsgError] = useState();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -20,6 +21,7 @@ const Login = () => {
       Alert.alert('Éxito', 'Inicio de sesión correcto');
       router.replace('/home/home')
     } catch (error: any) {
+      setmsgError(error)
       Alert.alert('Error', error.message || 'Error al iniciar sesión');
     }
   };
@@ -46,6 +48,8 @@ const Login = () => {
         secureTextEntry
         placeholderTextColor="#aaa"
       />
+
+      {msgError && <Text style={{ color: 'red' }}>{JSON.stringify(msgError)}</Text>}
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>

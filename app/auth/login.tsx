@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getCurrentUser, signIn } from './services/authServices';
 
@@ -17,12 +17,9 @@ const Login = () => {
 
     try {
       const response = await signIn(email, password);
-      console.log(response);
-      Alert.alert('Éxito', 'Inicio de sesión correcto');
       router.replace('/home/home')
     } catch (error: any) {
-      setmsgError(error)
-      Alert.alert('Error', error.message || 'Error al iniciar sesión');
+      setmsgError(error.message);
     }
   };
 
@@ -49,7 +46,7 @@ const Login = () => {
         placeholderTextColor="#aaa"
       />
 
-      {msgError && <Text style={{ color: 'red' }}>{JSON.stringify(msgError)}</Text>}
+      {msgError && <Text style={styles.fieldError}>{msgError}</Text>}
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
@@ -105,6 +102,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: '#007bff',
     fontSize: 14,
+  },
+  fieldError: {
+    marginTop: 4,
+    color: 'red',
+    fontSize: 13,
   },
 });
 

@@ -1,6 +1,6 @@
+import { configureAmplify } from "@/config/amplifySetup";
 import { Stack,  } from "expo-router";
 import { useEffect } from "react";
-import { configureAmplify } from "@/src/amplifySetup";
 
 export default function RootLayout() {
 

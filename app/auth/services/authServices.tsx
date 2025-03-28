@@ -15,8 +15,9 @@ export const signUp = async (user: User) => {
     });
     return result;
   } catch (error: any) {
-    console.log("Error during signUp:", error);
-    throw { message: getErrorMessage(error.name) };
+    console.log("⚠️ SIGNUP ERROR - FULL DETAILS:");
+    console.log("error:", error.name);
+    throw { message: getErrorMessage(error.code) || "Error al iniciar sesión." };
   }
 };
 
@@ -38,8 +39,6 @@ export const signIn = async (email: string, password: string) => {
   } catch (error: any) {
     console.log("⚠️ SIGNIN ERROR - FULL DETAILS:");
     console.log("error.name:", error.name);
-    console.log("error.message:", error.message);
-    console.log("error.underlyingError:", error.underlyingError);
     console.log("full error:", JSON.stringify(error, null, 2));
     throw { message: error.message || error.name || "Unknown error during sign-in" };
   }
@@ -72,6 +71,9 @@ const getErrorMessage = (code: string): string => {
     InvalidParameterException: "Uno o más campos no son válidos.",
     UserNotFoundException: "Usuario y contraseña no coinciden.",
     CodeMismatchException: "El código de verificación no es correcto.",
+    UserNotConfirmedException: "El usuario no está confirmado. Por favor verifica tu correo.",
+    NotAuthorizedException: "El correo o la contraseña son incorrectos.",
+    LimitExceededException: "Se ha alcanzado el límite de intentos. Intenta más tarde.",
   };
 
   return errorMessages[code] ?? "No se pudo completar el registro.";

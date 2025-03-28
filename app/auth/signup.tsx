@@ -1,118 +1,110 @@
-import React, { useState } from 'react';
-import { Text, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { signUp, confirmSignUp } from './services/authServices';
-import { SignUpForm } from './models/types';
+import { Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, View } from 'react-native';
+import { Controller } from 'react-hook-form';
+import { useSignUpForm } from './hooks/useSignup';
+import { ValidateOtp } from './components/validateOtp';
+import { ValidateCodeForm } from './models/signUpSchema';
 
 const SignUp = () => {
+  const { control, email, handleSubmit, onSignUp, onConfirm, errors, generalError, step, validateCodeForm } = useSignUpForm();
 
-  const [form, setForm] = useState<SignUpForm>({
-    email: '',
-    password: '',
-    name: '',
-    lastName: '',
-    code: '',
-  });
-
-  const [step, setStep] = useState<'signUp' | 'confirm'>('signUp');
-
-  const router = useRouter();
-
-  const handleChange = (key: keyof SignUpForm, value: string) => {
-    setForm({ ...form, [key]: value });
-  };
-
-  const handleSignUp = async () => {
-    const { email, password, name, lastName } = form;
-
-    if (!email || !password || !name || !lastName) {
-      Alert.alert('Error', 'Por favor completa todos los campos');
-      return;
-    }
-
-    try {
-      await signUp(form);
-      Alert.alert('Verifica tu correo', 'Revisa tu email y escribe el código de verificación');
-      setStep('confirm');
-    } catch (error: any) {
-      Alert.alert('Error', error.message || 'Error al registrarse');
-    }
-  };
-
-  const handleConfirmSignUp = async () => {
-    if (!form.code) {
-      Alert.alert('Error', 'Por favor ingresa el código de confirmación');
-      return;
-    }
-
-    try {
-      await confirmSignUp(form.email, form.code);
-      Alert.alert('Éxito', 'Cuenta confirmada correctamente');
-      router.replace('/auth/login');
-    } catch (error: any) {
-      Alert.alert('Error', error.message || 'Error al confirmar el registro');
-    }
-  };
-
+  const onValidateCode = (data: ValidateCodeForm) => {
+    onConfirm(data,email);
+  }
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Registro</Text>
-
       {step === 'signUp' ? (
         <>
-          <TextInput
-            style={styles.input}
-            placeholder="Nombre"
-            value={form.name}
-            onChangeText={(value) => handleChange('name', value)}
-            autoCapitalize="words"
-            placeholderTextColor="#aaa"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Apellido"
-            value={form.lastName}
-            onChangeText={(value) => handleChange('lastName', value)}
-            autoCapitalize="words"
-            placeholderTextColor="#aaa"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={form.email}
-            onChangeText={(value) => handleChange('email', value)}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            placeholderTextColor="#aaa"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            value={form.password}
-            onChangeText={(value) => handleChange('password', value)}
-            secureTextEntry
-            placeholderTextColor="#aaa"
+        <Text style={styles.title}>Registro</Text>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input, error && styles.errorBorder]}
+                  placeholder="Nombre"
+                  value={value}
+                  onChangeText={onChange}
+                  placeholderTextColor="#aaa"
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.fieldError}>{error.message}</Text>}
+              </View>
+            )}
           />
 
-          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+          <Controller
+            name="lastName"
+            control={control}
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input, error && styles.errorBorder]}
+                  placeholder="Apellido"
+                  value={value}
+                  onChangeText={onChange}
+                  placeholderTextColor="#aaa"
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.fieldError}>{error.message}</Text>}
+              </View>
+            )}
+          />
+
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input, error && styles.errorBorder]}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={value}
+                  onChangeText={onChange}
+                  placeholderTextColor="#aaa"
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.fieldError}>{error.message}</Text>}
+              </View>
+            )}
+          />
+
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input, error && styles.errorBorder]}
+                  placeholder="Contraseña"
+                  secureTextEntry
+                  value={value}
+                  onChangeText={onChange}
+                  placeholderTextColor="#aaa"
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.fieldError}>{error.message}</Text>}
+              </View>
+            )}
+          />
+
+          {generalError ? <Text style={styles.generalError}>{generalError}</Text> : null}
+
+          <TouchableOpacity style={styles.button} onPress={handleSubmit(onSignUp)}>
             <Text style={styles.buttonText}>Registrarse</Text>
           </TouchableOpacity>
         </>
       ) : (
         <>
-          <Text style={styles.subtitle}>Confirmar Registro</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Código de confirmación"
-            value={form.code}
-            onChangeText={(value) => handleChange('code', value)}
-            keyboardType="number-pad"
-            placeholderTextColor="#aaa"
+          <Text style={styles.title}>Confirmar email</Text>
+          <ValidateOtp
+            form={validateCodeForm}
+            email={email}
+            errorMessage={generalError}
+            onConfirm={validateCodeForm.handleSubmit(onValidateCode)}
           />
-
-          <TouchableOpacity style={styles.button} onPress={handleConfirmSignUp}>
-            <Text style={styles.buttonText}>Confirmar</Text>
-          </TouchableOpacity>
         </>
       )}
     </ScrollView>
@@ -139,10 +131,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#555',
   },
+  inputContainer: {
+    width: '100%',
+    marginBottom: 12,
+  },
   input: {
     width: '100%',
     padding: 12,
-    marginBottom: 15,
     backgroundColor: '#fff',
     borderRadius: 8,
     borderWidth: 1,
@@ -150,10 +145,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  errorBorder: {
+    borderColor: 'red',
+  },
+  fieldError: {
+    marginTop: 4,
+    color: 'red',
+    fontSize: 13,
+  },
+  generalError: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   button: {
-  backgroundColor: '#333',
+    backgroundColor: '#333',
     paddingVertical: 12,
-    paddingHorizontal: 32,
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',

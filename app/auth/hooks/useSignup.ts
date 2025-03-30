@@ -50,10 +50,16 @@ export const useSignUpForm = () => {
   const onConfirm = async (data: ValidateCodeForm, email: string) => {
     setGeneralError('');
     try {
-      await confirmSignUp(email, data.code);
+      const response = await confirmSignUp(email, data.code);
+      console.log('response confirmSignUp', JSON.stringify(response));
+      if (!response.error) {
       router.replace('/auth/login');
+      }
+      return response
+
     } catch (error: any) {
       setGeneralError(error.message || 'Error al confirmar el registro');
+      throw error;
     }
   };
 

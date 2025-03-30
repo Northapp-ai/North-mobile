@@ -17,39 +17,39 @@ export const signUp = async (user: User) => {
   } catch (error: any) {
     console.log("⚠️ SIGNUP ERROR - FULL DETAILS:");
     console.log("error:", error.name);
-    throw { message: getErrorMessage(error.code) || "Error al iniciar sesión." };
+    throw { message: getErrorMessage(error.code) || "Error al iniciar sesión.", name: error.code };
+
   }
 };
 
 export const confirmSignUp = async (email: string, code: string) => {
   try {
-    const result = await Auth.confirmSignUp(email, code);
-    return result;
-  } catch (error) {
+    const response = await Auth.confirmSignUp(email, code);
+    console.log('response confirmSignUp', JSON.stringify(response));
+    return response;
+  } catch (error: any) {
     console.error("Error during confirmSignUp:", error);
-    throw error;
+    throw { message: getErrorMessage(error.code) || "Error al confirmar otp.", name: error.code };
   }
 };
 
 export const signIn = async (email: string, password: string) => {
   try {
     const result = await Auth.signIn(email.trim(), password);
-    console.log("SignIn Success:", result);
     return result;
   } catch (error: any) {
     console.log("⚠️ SIGNIN ERROR - FULL DETAILS:");
     console.log("error.name:", error.name);
-    console.log("full error:", JSON.stringify(error, null, 2));
-    throw { message: error.message || error.name || "Unknown error during sign-in" };
+    throw { message: getErrorMessage(error.code), name: error.code };
   }
 };
 
 export const signOut = async () => {
   try {
     return await Auth.signOut();
-  } catch (error) {
+  } catch (error:any) {
     console.error("Error during signOut:", error);
-    throw error;
+    throw { message: getErrorMessage(error.code), name: error.code };
   }
 };
 
@@ -58,11 +58,22 @@ export const getCurrentUser = async () => {
     const response = await Auth.currentAuthenticatedUser();
     console.log('response', response);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error during getCurrentUser:", error);
-    throw error;
+    throw { message: getErrorMessage(error.code), name: error.name };
   }
 };
+
+export const resendSignUpCode = async (email: string) => {
+  try {
+    const response = await Auth.resendSignUp(email);
+    console.log('response', JSON.stringify(response));
+    return response;
+  } catch (error: any) {
+    console.error("Error al reenviar el código de verificación:", error);
+    throw { message: getErrorMessage(error.code), name: error.name };
+  }
+}
 
 const getErrorMessage = (code: string): string => {
   const errorMessages: { [key: string]: string } = {

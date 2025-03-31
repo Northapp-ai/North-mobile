@@ -1,20 +1,25 @@
-import { Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, View } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, View, Alert } from 'react-native';
 import { Controller } from 'react-hook-form';
 import { useSignUpForm } from './hooks/useSignup';
 import { ValidateOtp } from './components/validateOtp';
 import { ValidateCodeForm } from './models/signUpSchema';
+import { router } from 'expo-router';
 
 const SignUp = () => {
-  const { control, email, handleSubmit, onSignUp, onConfirm, errors, generalError, step, validateCodeForm } = useSignUpForm();
+  const { control, email, handleSubmit, onSignUp, onConfirm, generalError, step, validateCodeForm } = useSignUpForm();
 
-  const onValidateCode = (data: ValidateCodeForm) => {
-    onConfirm(data,email);
+  const onValidateCode = async (data: ValidateCodeForm) => {
+    const response = await onConfirm(data, email);
+    if (response.error) {
+      return Alert.alert('Error', response.error.message || 'Error al confirmar el código');
+    }
+    router.replace(`/auth/login`);
   }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {step === 'signUp' ? (
         <>
-        <Text style={styles.title}>Registro</Text>
+          <Text style={styles.title}>Registro</Text>
           <Controller
             name="name"
             control={control}

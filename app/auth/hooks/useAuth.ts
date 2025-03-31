@@ -6,10 +6,10 @@ export const useAuth = () => {
     const { email, password } = data;
     try {
       const response = await signIn(email, password);
-      return response
+      return mapperUser(response);
     } catch (error: any) {
       if (error.name === 'UserNotConfirmedException') {
-        return {error}
+        return { error }
       }
       throw error
     }
@@ -22,7 +22,17 @@ export const useAuth = () => {
       return response;
     } catch (error: any) {
       console.error("Error during resendSignUpCode:", error);
-      return {error}
+      return { error }
+    }
+  }
+
+  const mapperUser = (user: any) => {
+    const { email, name, family_name } = user.attributes;
+    return {
+      email,
+      name,
+      fullName: `${name} ${family_name}`,
+      lastName: family_name,
     }
   }
 

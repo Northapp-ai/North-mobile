@@ -29,7 +29,8 @@ export const confirmSignUp = async (email: string, code: string) => {
     return response;
   } catch (error: any) {
     console.error("Error during confirmSignUp:", error);
-    throw { message: getErrorMessage(error.code) || "Error al confirmar otp.", name: error.code };
+    const newError = { message: getErrorMessage(error.code) || "Error al confirmar otp.", name: error.code };
+    throw newError
   }
 };
 

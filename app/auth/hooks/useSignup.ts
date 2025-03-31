@@ -8,7 +8,6 @@ import { signUpSchema, SignUpForm, ValidateCodeForm, validateCodeSchema } from '
 export const useSignUpForm = () => {
   const [step, setStep] = useState<'signUp' | 'confirm'>('signUp');
   const [generalError, setGeneralError] = useState('');
-  const router = useRouter();
 
   const {
     control,
@@ -48,18 +47,12 @@ export const useSignUpForm = () => {
   });
 
   const onConfirm = async (data: ValidateCodeForm, email: string) => {
-    setGeneralError('');
     try {
       const response = await confirmSignUp(email, data.code);
-      console.log('response confirmSignUp', JSON.stringify(response));
-      if (!response.error) {
-      router.replace('/auth/login');
-      }
       return response
-
     } catch (error: any) {
-      setGeneralError(error.message || 'Error al confirmar el registro');
-      throw error;
+      setGeneralError(error.message || 'Error al geenerar el código');
+      return {error};
     }
   };
 

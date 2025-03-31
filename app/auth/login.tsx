@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ValidateOtp } from './components/validateOtp';
 import useSignUpForm from './hooks/useSignup';
@@ -15,40 +15,46 @@ const Login = () => {
   const router = useRouter();
 
   const { onSingIn, onResendSignUpCode } = useAuth();
-  const { validateCodeForm, onConfirm, generalError } = useSignUpForm();
+  const { validateCodeForm, onConfirm } = useSignUpForm();
 
   const handleLogin = async () => {
     setMsgError(undefined);
     if (!email || !password) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
       setMsgError('Por favor completa todos los campos');
       return;
     }
     try {
       const response = await onSingIn({ email, password });
-
+      const { fullName } = response;
       if (response?.error?.name === 'UserNotConfirmedException') {
         const responseResendCode = await onResendSignUpCode(email);
         if (responseResendCode.error) {
-          setMsgError(responseResendCode.error.message || 'Error al enviar el código de confirmación.');
+          Alert.alert('Error', responseResendCode.error.message || 'Error al enviar el código de confirmación');
+          setMsgErrorCode(responseResendCode.error.message || 'Error al enviar el código de confirmación');
           return
         }
         setShowOtp(true);
         return
       }
-      router.replace('/home/home')
+      // TODO: Guardar el token en el storage y la data de usuario en zustand
+      router.replace(`/profile/profile?fullName=${fullName}`);
     } catch (error: any) {
       setMsgError(error.message || 'Error al iniciar sesión.');
     }
   };
 
-  const handleConfirmCode = (data: ValidateCodeForm) => {
+  const handleConfirmCode = async (data: ValidateCodeForm) => {
     setMsgErrorCode(undefined);
     try {
-      const response = onConfirm(data, email);
-      console.log('response confirmSignUp', JSON.stringify(response));
+      const response = await onConfirm(data, email);
+      if (response?.error) {
+        setMsgErrorCode(response.error.message || 'Error al confirmar el código');
+        return
+      }
       setShowOtp(false);
     } catch (error: any) {
-      setShowOtp(true);
+      console.log('error confirmSignUp test', JSON.stringify(error));
       setMsgErrorCode(error.name)
     }
   };

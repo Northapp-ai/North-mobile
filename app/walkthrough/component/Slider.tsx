@@ -80,7 +80,7 @@ export default function Slider({ data, loop }: SliderProps) {
         containerStyle={{ gap: 5, marginTop: 10 }}
         onPress={onPressPagination}
       />
-      {isLastSlide && <Button redirecTo="/walkthrough/enter" text="Continue" />}
+      {isLastSlide && <Button redirecTo="/profile/profile" text="Continue" />}
     </View>
   );
 }

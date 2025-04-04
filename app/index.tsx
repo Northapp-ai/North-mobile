@@ -33,7 +33,7 @@ export default function Index() {
           the age of distraction.
         </Text>
 
-        <Button redirecTo="/walkthrough/enter" text="Get started" />
+        <Button redirecTo="/auth/login" text="Get started" />
       </View>
     </ScrollView>
   );

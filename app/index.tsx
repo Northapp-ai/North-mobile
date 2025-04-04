@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import useLoadFonts from "./hooks/useLoadFonts";
-import Button from "./compoenents/Button";
+import Button from "./components/Button";
 
 export default function Index() {
   const { loaded, error } = useLoadFonts();

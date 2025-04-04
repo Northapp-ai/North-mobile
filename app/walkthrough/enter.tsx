@@ -1,6 +1,6 @@
 import React from "react";
 import { Dimensions, Image, ScrollView, StyleSheet, View } from "react-native";
-import Button from "../compoenents/Button";
+import Button from "../components/Button";
 
 export default function Enter() {
   return (

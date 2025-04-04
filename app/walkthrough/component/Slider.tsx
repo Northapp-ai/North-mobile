@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, {
   CarouselRenderItem,
@@ -9,8 +9,7 @@ import Carousel, {
 import { SlideItem } from "./SliderItem";
 import { Options, SliderProps } from "./types";
 import SliderItemDescription from "./SliderItemDescription";
-import { router } from "expo-router";
-import Button from "@/app/compoenents/Button";
+import Button from "@/app/components/Button";
 
 export const renderItem =
   (options: Options = {}): CarouselRenderItem<any> =>

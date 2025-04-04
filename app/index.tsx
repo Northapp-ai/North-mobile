@@ -1,6 +1,13 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { router } from "expo-router";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import useLoadFonts from "./hooks/useLoadFonts";
+import Button from "./compoenents/Button";
 
 export default function Index() {
   const { loaded, error } = useLoadFonts();
@@ -9,7 +16,10 @@ export default function Index() {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.homeContainer}>
         <View>
           <Image
@@ -23,16 +33,13 @@ export default function Index() {
           the age of distraction.
         </Text>
 
-        <Pressable
-          style={({ pressed }) => styles.buttonContainer}
-          onPress={() => router.push("/auth/login")}
-        >
-          <Text style={styles.buttonText}>Get started</Text>
-        </Pressable>
+        <Button redirecTo="/auth/login" text="Get started" />
       </View>
     </ScrollView>
   );
 }
+
+const width = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   homeContainer: {
@@ -45,7 +52,7 @@ const styles = StyleSheet.create({
     gap: 30,
   },
   image: {
-    width: 300,
+    width: width - 60,
     height: 400,
     borderRadius: 15,
     justifyContent: "center",
@@ -55,17 +62,5 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: "#A6A69F",
     justifyContent: "center",
-  },
-  buttonText: {
-    color: "black",
-    fontSize: 14,
-    fontFamily: "Inter_500Medium",
-  },
-  buttonContainer: {
-    backgroundColor: "#D9D9D9",
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    width: 292,
   },
 });

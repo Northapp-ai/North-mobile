@@ -1,16 +1,25 @@
-import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { ValidateOtp } from './components/validateOtp';
-import useSignUpForm from './hooks/useSignup';
-import { ValidateCodeForm } from './models/signUpSchema';
-import useAuth from './hooks/useAuth';
+import { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { ValidateOtp } from "./components/validateOtp";
+import useSignUpForm from "./hooks/useSignup";
+import { ValidateCodeForm } from "./models/signUpSchema";
+import useAuth from "./hooks/useAuth";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [msgError, setMsgError] = useState<string | undefined>(undefined);
-  const [msgErrorCode, setMsgErrorCode] = useState<string | undefined>(undefined);
+  const [msgErrorCode, setMsgErrorCode] = useState<string | undefined>(
+    undefined
+  );
   const [showOtp, setShowOtp] = useState(false);
   const router = useRouter();
 
@@ -20,27 +29,34 @@ const Login = () => {
   const handleLogin = async () => {
     setMsgError(undefined);
     if (!email || !password) {
-      Alert.alert('Error', 'Por favor completa todos los campos');
-      setMsgError('Por favor completa todos los campos');
+      Alert.alert("Error", "Por favor completa todos los campos");
+      setMsgError("Por favor completa todos los campos");
       return;
     }
     try {
-      const response = await onSingIn({ email, password });
-      const { fullName } = response;
-      if (response?.error?.name === 'UserNotConfirmedException') {
+      const response = (await onSingIn({ email, password })) as any;
+      // const { fullName } = response;
+      if (response?.error?.name === "UserNotConfirmedException") {
         const responseResendCode = await onResendSignUpCode(email);
         if (responseResendCode.error) {
-          Alert.alert('Error', responseResendCode.error.message || 'Error al enviar el código de confirmación');
-          setMsgErrorCode(responseResendCode.error.message || 'Error al enviar el código de confirmación');
-          return
+          Alert.alert(
+            "Error",
+            responseResendCode.error.message ||
+              "Error al enviar el código de confirmación"
+          );
+          setMsgErrorCode(
+            responseResendCode.error.message ||
+              "Error al enviar el código de confirmación"
+          );
+          return;
         }
         setShowOtp(true);
-        return
+        return;
       }
       // TODO: Guardar el token en el storage y la data de usuario en zustand
-      router.replace(`/profile/profile?fullName=${fullName}`);
+      router.replace(`/walkthrough/enter`);
     } catch (error: any) {
-      setMsgError(error.message || 'Error al iniciar sesión.');
+      setMsgError(error.message || "Error al iniciar sesión.");
     }
   };
 
@@ -49,13 +65,15 @@ const Login = () => {
     try {
       const response = await onConfirm(data, email);
       if (response?.error) {
-        setMsgErrorCode(response.error.message || 'Error al confirmar el código');
-        return
+        setMsgErrorCode(
+          response.error.message || "Error al confirmar el código"
+        );
+        return;
       }
       setShowOtp(false);
     } catch (error: any) {
-      console.log('error confirmSignUp test', JSON.stringify(error));
-      setMsgErrorCode(error.name)
+      console.log("error confirmSignUp test", JSON.stringify(error));
+      setMsgErrorCode(error.name);
     }
   };
 
@@ -90,7 +108,7 @@ const Login = () => {
             <Text style={styles.buttonText}>Iniciar Sesión</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push('/auth/signup')}>
+          <TouchableOpacity onPress={() => router.push("/auth/signup")}>
             <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
           </TouchableOpacity>
         </>
@@ -104,7 +122,6 @@ const Login = () => {
           form={validateCodeForm}
         />
       )}
-
     </View>
   );
 };
@@ -112,50 +129,50 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 30,
-    color: '#333',
+    color: "#333",
   },
   input: {
-    width: '100%',
+    width: "100%",
     padding: 12,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   button: {
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 8,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   linkText: {
     marginTop: 20,
-    color: '#007bff',
+    color: "#007bff",
     fontSize: 14,
   },
   fieldError: {
     marginTop: 4,
-    color: 'red',
+    color: "red",
     fontSize: 13,
   },
 });

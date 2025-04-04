@@ -1,26 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { signIn } from './services/authServices';
+import { ValidateOtp } from './components/validateOtp';
+import useSignUpForm from './hooks/useSignup';
+import { ValidateCodeForm } from './models/signUpSchema';
+import useAuth from './hooks/useAuth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [msgError, setMsgError] = useState<string | undefined>(undefined);
+  const [msgErrorCode, setMsgErrorCode] = useState<string | undefined>(undefined);
+  const [showOtp, setShowOtp] = useState(false);
   const router = useRouter();
 
+  const { onSingIn, onResendSignUpCode } = useAuth();
+  const { validateCodeForm, onConfirm } = useSignUpForm();
+
   const handleLogin = async () => {
+    setMsgError(undefined);
     if (!email || !password) {
       Alert.alert('Error', 'Por favor completa todos los campos');
+      setMsgError('Por favor completa todos los campos');
       return;
     }
-
     try {
-      const response = await signIn(email, password);
-      console.log(response);
-      Alert.alert('Éxito', 'Inicio de sesión correcto');
-      router.replace('/home/home')
+      const response = await onSingIn({ email, password });
+      const { fullName } = response;
+      if (response?.error?.name === 'UserNotConfirmedException') {
+        const responseResendCode = await onResendSignUpCode(email);
+        if (responseResendCode.error) {
+          Alert.alert('Error', responseResendCode.error.message || 'Error al enviar el código de confirmación');
+          setMsgErrorCode(responseResendCode.error.message || 'Error al enviar el código de confirmación');
+          return
+        }
+        setShowOtp(true);
+        return
+      }
+      // TODO: Guardar el token en el storage y la data de usuario en zustand
+      router.replace(`/profile/profile?fullName=${fullName}`);
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'Error al iniciar sesión');
+      setMsgError(error.message || 'Error al iniciar sesión.');
+    }
+  };
+
+  const handleConfirmCode = async (data: ValidateCodeForm) => {
+    setMsgErrorCode(undefined);
+    try {
+      const response = await onConfirm(data, email);
+      if (response?.error) {
+        setMsgErrorCode(response.error.message || 'Error al confirmar el código');
+        return
+      }
+      setShowOtp(false);
+    } catch (error: any) {
+      console.log('error confirmSignUp test', JSON.stringify(error));
+      setMsgErrorCode(error.name)
     }
   };
 
@@ -28,32 +63,48 @@ const Login = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Iniciar Sesión</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        placeholderTextColor="#aaa"
-      />
+      {!showOtp && (
+        <>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            placeholderTextColor="#aaa"
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholderTextColor="#aaa"
-      />
+          <TextInput
+            style={styles.input}
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholderTextColor="#aaa"
+          />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Iniciar Sesión</Text>
-      </TouchableOpacity>
+          {msgError && <Text style={styles.fieldError}>{msgError}</Text>}
 
-      <TouchableOpacity onPress={() => router.push('/auth/signup')}>
-        <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Iniciar Sesión</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.push('/auth/signup')}>
+            <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      {showOtp && (
+        <ValidateOtp
+          email={email}
+          onConfirm={validateCodeForm.handleSubmit(handleConfirmCode)}
+          errorMessage={msgErrorCode}
+          form={validateCodeForm}
+        />
+      )}
+
     </View>
   );
 };
@@ -101,6 +152,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: '#007bff',
     fontSize: 14,
+  },
+  fieldError: {
+    marginTop: 4,
+    color: 'red',
+    fontSize: 13,
   },
 });
 

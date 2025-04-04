@@ -1,0 +1,39 @@
+import Constants from "expo-constants";
+const extra = Constants.expoConfig?.extra;
+
+const awsConfig = {
+  "aws_project_region": extra?.awsRegion,
+  "aws_cognito_region": extra?.awsRegion,
+  "aws_cognito_identity_pool_id": extra?.awsIdentityPoolId,
+  "aws_user_pools_id": extra?.awsUserPoolsId,
+  "aws_user_pools_web_client_id": extra?.awsUserPoolsWebClientId,
+  "Auth": {
+    "region": extra?.awsRegion,
+    "userPoolId": extra?.awsUserPoolsId,
+    "userPoolWebClientId": extra?.awsUserPoolsWebClientId,
+    "identityPoolId": extra?.awsIdentityPoolId,
+    "mandatorySignIn": true,
+    "authenticationFlowType": 'USER_PASSWORD_AUTH'
+  },
+  "oauth": {},
+  "aws_cognito_username_attributes": [
+    "EMAIL"
+  ],
+  "aws_cognito_social_providers": [],
+  "aws_cognito_signup_attributes": [
+    "EMAIL"
+  ],
+  "aws_cognito_mfa_configuration": "OFF",
+  "aws_cognito_mfa_types": [
+    "SMS"
+  ],
+  "aws_cognito_password_protection_settings": {
+    "passwordPolicyMinLength": 8,
+    // "passwordPolicyCharacters": ["REQUIRES_LOWERCASE", "REQUIRES_UPPERCASE", "REQUIRES_NUMBERS", "REQUIRES_SYMBOLS"]
+  },
+  "aws_cognito_verification_mechanisms": [
+    "EMAIL"
+  ]
+};
+
+export default awsConfig;

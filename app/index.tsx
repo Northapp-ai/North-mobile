@@ -1,10 +1,6 @@
-import awsConfig from "@/src/aws-exports";
-import { Amplify } from "aws-amplify";
-import { router } from "expo-router";
 import {
   Dimensions,
   Image,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,9 +8,6 @@ import {
 } from "react-native";
 import useLoadFonts from "./hooks/useLoadFonts";
 import Button from "./compoenents/Button";
-
-Amplify.configure(awsConfig);
-console.log("Amplify configured", awsConfig);
 
 export default function Index() {
   const { loaded, error } = useLoadFonts();

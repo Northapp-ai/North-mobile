@@ -16,5 +16,23 @@
         "northmobile2e9eadfd": {}
       }
     }
+  },
+  "northtest": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-northmobile-northtest-85ef7-authRole",
+      "UnauthRoleArn": "arn:aws:iam::961341538611:role/amplify-northmobile-northtest-85ef7-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::961341538611:role/amplify-northmobile-northtest-85ef7-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-northmobile-northtest-85ef7-deployment",
+      "UnauthRoleName": "amplify-northmobile-northtest-85ef7-unauthRole",
+      "StackName": "amplify-northmobile-northtest-85ef7",
+      "StackId": "arn:aws:cloudformation:us-east-1:961341538611:stack/amplify-northmobile-northtest-85ef7/97b2abc0-0ab6-11f0-bfb0-12c2e8f11767",
+      "AmplifyAppId": "d2lkug7yy0f1lq"
+    },
+    "categories": {
+      "auth": {
+        "northmobile2e9eadfd": {}
+      }
+    }
   }
 }

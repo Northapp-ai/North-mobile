@@ -12,6 +12,7 @@ import { ValidateOtp } from "./components/validateOtp";
 import useSignUpForm from "./hooks/useSignup";
 import { ValidateCodeForm } from "./models/signUpSchema";
 import useAuth from "./hooks/useAuth";
+import { useAppStore } from "../store";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +26,7 @@ const Login = () => {
 
   const { onSingIn, onResendSignUpCode } = useAuth();
   const { validateCodeForm, onConfirm } = useSignUpForm();
+  const setUser = useAppStore((state) => state.setUser);
 
   const handleLogin = async () => {
     setMsgError(undefined);
@@ -35,7 +37,7 @@ const Login = () => {
     }
     try {
       const response = (await onSingIn({ email, password })) as any;
-      // const { fullName } = response;
+      setUser(response);
       if (response?.error?.name === "UserNotConfirmedException") {
         const responseResendCode = await onResendSignUpCode(email);
         if (responseResendCode.error) {

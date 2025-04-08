@@ -1,21 +1,31 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Alert } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Image,
+  Alert,
+} from "react-native";
+import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { StatusBar } from "expo-status-bar";
+
 import LogoutButton from "@/components/logoutButton";
 import { signOut } from "../auth/services/authServices";
-import { router, useLocalSearchParams } from "expo-router";
+import { useAppStore } from "../store";
 
 const ProfileScreen = () => {
   const [images, setImages] = useState(Array(6).fill(null));
-  const { fullName } = useLocalSearchParams();
-  const pickImage = async (index:number) => {
+  const user = useAppStore((state) => state.user);
+  const pickImage = async (index: number) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
     });
 
     if (!result.canceled) {
@@ -28,9 +38,9 @@ const ProfileScreen = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-      router.replace('/auth/login')
+      router.replace("/auth/login");
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'No se pudo cerrar sesión');
+      Alert.alert("Error", error.message || "No se pudo cerrar sesión");
     }
   };
 
@@ -47,7 +57,7 @@ const ProfileScreen = () => {
         <View style={styles.avatarContainer}>
           <Ionicons name="person-outline" size={30} />
         </View>
-        <Text style={styles.profileName}>{fullName}</Text>
+        <Text style={styles.profileName}>{user.name}</Text>
         <Text style={styles.profileDescription}>Description</Text>
       </View>
 
@@ -67,7 +77,10 @@ const ProfileScreen = () => {
         {images.map((image, index) => (
           <TouchableOpacity
             key={index}
-            style={[styles.card, index % 3 === 0 ? styles.largeCard : styles.smallCard]}
+            style={[
+              styles.card,
+              index % 3 === 0 ? styles.largeCard : styles.smallCard,
+            ]}
             onPress={() => pickImage(index)}
           >
             {image ? (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,30 +10,35 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
 
 import LogoutButton from "@/components/logoutButton";
 import { signOut } from "../auth/services/authServices";
 import { useAppStore } from "../store";
+import { Goal } from "../auth/models/types";
+import CustomGalleryModal from "@/components/customGaleryModal";
+import type * as MediaLibrary from "expo-media-library";
+import GoalName from "../goal/GoalName";
+import GoalFlowScreen from "../goal/GoalFlowScreen";
 
 const ProfileScreen = () => {
-  const [images, setImages] = useState(Array(6).fill(null));
-  const user = useAppStore((state) => state.user);
-  const pickImage = async (index: number) => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      mediaTypes: ["images"],
-    });
+  const maxCards = 6
 
-    if (!result.canceled) {
-      const newImages = [...images];
-      newImages[index] = result.assets[0].uri;
-      setImages(newImages);
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [dataGoals, setDataGoals] = useState<Goal[]>(Array(maxCards).fill(null));
+  const goalsList = useAppStore((state) => state.goals);
+  const user = useAppStore((state) => state.user);
+  const addCurrentGoal = useAppStore((state) => state.addCurrentGoal);
+
+  useEffect(() => {
+    const cardAvoid = maxCards - goalsList.length;
+
+    if (goalsList.length > 0) {
+      const fillerImages = Array.from({ length: cardAvoid }, () => null);
+      const completedImages = [...goalsList, ...fillerImages];
+      setDataGoals(completedImages);
     }
-  };
+  }, [goalsList]);
 
   const handleLogout = async () => {
     try {
@@ -44,12 +49,31 @@ const ProfileScreen = () => {
     }
   };
 
+  const handleSelectImage = async (uri: string) => {
+    if (!uri) {
+      setVisibleModal(true)
+    }
+  }
+
+  const handledAddImage = (image: MediaLibrary.AssetInfo) => {
+
+    const dataCurrentGoal: Goal = {
+      id: Date.now().toString(),
+      name: '',
+      uri: image.localUri || "",
+      dueDate: new Date(),
+    }
+
+    addCurrentGoal({ ...dataCurrentGoal });
+    setVisibleModal(false)
+    router.push({ pathname: "/goal/GoalName" })
+  }
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="dark" />
 
       <View style={styles.headerContainer}>
-        {/* <Ionicons name="menu" size={24} /> */}
         <LogoutButton onLogout={handleLogout} />
       </View>
 
@@ -57,7 +81,7 @@ const ProfileScreen = () => {
         <View style={styles.avatarContainer}>
           <Ionicons name="person-outline" size={30} />
         </View>
-        <Text style={styles.profileName}>{user.name}</Text>
+        <Text style={styles.profileName}>{user.fullName}</Text>
         <Text style={styles.profileDescription}>Description</Text>
       </View>
 
@@ -72,25 +96,40 @@ const ProfileScreen = () => {
       </View>
 
       <Text style={styles.yearText}>2024</Text>
-
       <View style={styles.cardsContainer}>
-        {images.map((image, index) => (
+        {dataGoals.map((data, index) => (
           <TouchableOpacity
             key={index}
             style={[
               styles.card,
               index % 3 === 0 ? styles.largeCard : styles.smallCard,
             ]}
-            onPress={() => pickImage(index)}
+            onPress={() => { handleSelectImage(data?.uri) }}
           >
-            {image ? (
-              <Image source={{ uri: image }} style={styles.image} />
+            {data ? (
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: data.uri }} style={styles.image} />
+                <View style={styles.footerOverlay}>
+                  <Text
+                    style={styles.footerText}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {data.name}
+                  </Text>
+                </View>
+              </View>
             ) : (
               <Ionicons name="add" size={24} color="#888" />
             )}
           </TouchableOpacity>
         ))}
       </View>
+
+    <CustomGalleryModal
+      visible={visibleModal}
+      onClose={() => setVisibleModal(false)}
+      onNext={handledAddImage} />
     </ScrollView>
   );
 };
@@ -172,6 +211,34 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover",
     borderRadius: 20,
+  },
+  imageContainer: {
+    width: '100%',
+    height: '100%',
+    alignSelf: 'center',
+    position: 'relative',
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+  },
+  footerOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  footerText: {
+    color: '#fff',
+    fontFamily: 'Inter_600SemiBold',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

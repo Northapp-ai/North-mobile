@@ -12,6 +12,8 @@ export default function RootLayout() {
       <Stack.Screen name="index" options={{ headerTitle: "Home" }} />
       <Stack.Screen name="auth/login" options={{ headerTitle: "Login" }} />
       <Stack.Screen name="auth/signup" options={{ headerTitle: "Signup" }} />
+      <Stack.Screen name="profile/profile" options={{ headerTitle: "Profile",  }} />
+      <Stack.Screen name="goal/GoalName" options={{ headerTitle: "Goal Name", presentation: "containedModal", headerShown: false }} />
       <Stack.Screen
         name="walkthrough/enter"
         options={{ headerTitle: "Welcome North" }}

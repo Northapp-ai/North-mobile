@@ -39,7 +39,7 @@ export const signIn = async (email: string, password: string) => {
     const result = await Auth.signIn(email.trim(), password);
     return result;
   } catch (error: any) {
-    console.log("⚠️ SIGNIN ERROR - FULL DETAILS:");
+    console.log("⚠️ SIGNIN ERROR - FULL DETAILS:", error);
     console.log("error.name:", error.name);
     throw { message: getErrorMessage(error.code), name: error.code };
   }
@@ -47,7 +47,7 @@ export const signIn = async (email: string, password: string) => {
 
 export const signOut = async () => {
   try {
-    return await Auth.signOut();
+    return await Auth.signOut({ global: true });
   } catch (error:any) {
     console.error("Error during signOut:", error);
     throw { message: getErrorMessage(error.code), name: error.code };

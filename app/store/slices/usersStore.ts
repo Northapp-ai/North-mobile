@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand";
-import { UsersSrore } from "../store.types";
+import { UsersStore } from "../store.types";
 
-export const useUsersStore: StateCreator<UsersSrore> = (set) => ({
+export const useUsersStore: StateCreator<UsersStore> = (set) => ({
   users: [],
   addUser: (user: any) => {
     set((state: any) => {

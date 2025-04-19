@@ -12,11 +12,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Modal,
   Alert,
 } from 'react-native';
 import { Goal } from '../auth/models/types';
-import { set } from 'react-hook-form';
 
 const MAX_GOAL_NAME_LENGTH = 35;
 
@@ -146,10 +144,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderRadius: 16,
     overflow: 'hidden',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
   },
   image: {

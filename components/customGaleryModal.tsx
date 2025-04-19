@@ -9,6 +9,8 @@ import {
   StyleSheet,
   SafeAreaView,
   ActivityIndicator,
+  Alert,
+  Platform,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 
@@ -61,11 +63,20 @@ const CustomGalleryModal = ({
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === 'granted') {
       await fetchPhotos();
+      return
     }
+    Alert.alert(
+      "Permiso requerido",
+      "Necesitamos acceso a tus fotos para que puedas seleccionar una imagen.",
+      [{ text: "OK" }]
+    );
   };
+
+
 
   const fetchPhotos = async (after?: string) => {
     try {
+      let assetsList: MediaLibrary.Asset[] | MediaLibrary.AssetInfo[] = [];
       const pageSize = 40;
       const assets = await MediaLibrary.getAssetsAsync({
         mediaType: "photo",
@@ -74,13 +85,17 @@ const CustomGalleryModal = ({
         sortBy: [["creationTime", false]],
       });
 
-      const detailedAssets = await Promise.all(
-        assets.assets.map((asset) => MediaLibrary.getAssetInfoAsync(asset.id))
-      );
+      if (Platform.OS === "ios") {
+        assetsList = await Promise.all(
+          assets.assets.map((asset) => MediaLibrary.getAssetInfoAsync(asset.id))
+        );
+        setPhotos((prev) => (after ? [...prev, ...assetsList] : assetsList));
+      } else {
+        assetsList = assets.assets;
+        setPhotos((prev) => (after ? [...prev, ...assetsList] : assetsList));
+      }
 
-      setPhotos((prev) => (after ? [...prev, ...detailedAssets] : detailedAssets));
-
-      if (!after) setSelectedPhoto(detailedAssets[0] || null);
+      if (!after) setSelectedPhoto(assetsList[0] || null);
       setHasNextPage(assets.hasNextPage);
       setEndCursor(assets.endCursor);
     } catch (error) {

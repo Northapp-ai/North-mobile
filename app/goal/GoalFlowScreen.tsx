@@ -4,10 +4,12 @@ import { useAppStore } from '../store';
 import {  View } from 'react-native';
 import CustomGalleryModal from '@/components/customGaleryModal';
 import GoalName from './GoalName';
+import { Goal } from '../auth/models/types';
 
 type Props = {
   showModal: boolean;
 }
+
 const GoalFlowScreen = ({ showModal }:Props) => {
 
   const step = useAppStore((state) => state.currentStep);
@@ -15,12 +17,12 @@ const GoalFlowScreen = ({ showModal }:Props) => {
   const updateCurrentStep = useAppStore((state) => state.updateCurrentStep);
   const [visibleModal, setVisibleModal] = useState(showModal)
 
-  const handledImage = (image: MediaLibrary.AssetInfo) => {
-    const dataCurrentGoal = {
+  const handledImage = (image: MediaLibrary.AssetInfo | MediaLibrary.Asset) => {
+    const dataCurrentGoal : Goal = {
       id: Date.now().toString(),
       name: '',
-      uri: image.localUri,
-      date: new Date(),
+      uri: image.localUri || image.uri,
+      dueDate: new Date(),
     }
   // setVisibleModal(false);
     addCurrentGoal(dataCurrentGoal);

@@ -55,12 +55,12 @@ const ProfileScreen = () => {
     }
   }
 
-  const handledAddImage = (image: MediaLibrary.AssetInfo) => {
+  const handledAddImage = (image: MediaLibrary.AssetInfo | MediaLibrary.Asset) => {
 
     const dataCurrentGoal: Goal = {
       id: Date.now().toString(),
       name: '',
-      uri: image.localUri || "",
+      uri:  image.localUri || image.uri,
       dueDate: new Date(),
     }
 
@@ -218,10 +218,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'relative',
     borderRadius: 16,
-    elevation: 3,
-    shadowColor: '#000',
     shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
   },
   footerOverlay: {

@@ -9,3 +9,10 @@ export type User = {
 export type SignUpForm = User & {
   code: string;
 };
+
+export type Goal = {
+  id: string;
+  name: string;
+  uri: string;
+  dueDate: Date;
+}

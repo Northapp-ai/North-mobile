@@ -13,6 +13,7 @@ import {
   Platform,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
 
 type CustomGalleryModalProps = {
   visible: boolean;
@@ -26,13 +27,14 @@ const CustomGalleryModal = ({
   onNext,
 }: CustomGalleryModalProps) => {
   const [photos, setPhotos] = useState<MediaLibrary.AssetInfo[]>([]);
-  const [selectedPhoto, setSelectedPhoto] = useState<MediaLibrary.AssetInfo | null>(null);
+  const [selectedPhoto, setSelectedPhoto] =
+    useState<MediaLibrary.AssetInfo | null>(null);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [endCursor, setEndCursor] = useState<string | undefined>(undefined);
   const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    requestMediaPermissions()
+    requestMediaPermissions();
   }, []);
 
   // useEffect(() => {
@@ -61,9 +63,9 @@ const CustomGalleryModal = ({
 
   const requestMediaPermissions = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status === 'granted') {
+    if (status === "granted") {
       await fetchPhotos();
-      return
+      return;
     }
     Alert.alert(
       "Permiso requerido",
@@ -72,7 +74,18 @@ const CustomGalleryModal = ({
     );
   };
 
+  const pickMorePhotos = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images",
+      allowsMultipleSelection: true,
+      quality: 1,
+    });
 
+    if (!result.canceled) {
+      const uris = result.assets.map((asset) => asset.uri);
+      setPhotos((prev) => [...prev, ...uris]);
+    }
+  };
 
   const fetchPhotos = async (after?: string) => {
     try {
@@ -110,7 +123,9 @@ const CustomGalleryModal = ({
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.actionText}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => selectedPhoto && onNext(selectedPhoto)}>
+          <TouchableOpacity
+            onPress={() => selectedPhoto && onNext(selectedPhoto)}
+          >
             <Text style={styles.actionText}>Next</Text>
           </TouchableOpacity>
         </View>
@@ -123,7 +138,16 @@ const CustomGalleryModal = ({
             />
           </View>
         )}
-
+        <View style={styles.actionsContainer}>
+          <View>
+            <Text>Recents</Text>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => pickMorePhotos()}>
+              <Text>Select more</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         {photos.length > 0 && (
           <FlatList
             data={photos}
@@ -142,10 +166,9 @@ const CustomGalleryModal = ({
             )}
             onEndReached={loadMorePhotos}
             onEndReachedThreshold={0.7}
-          // ListFooterComponent={loadingMore ? <ActivityIndicator size="small" /> : null}
+            // ListFooterComponent={loadingMore ? <ActivityIndicator size="small" /> : null}
           />
         )}
-
       </SafeAreaView>
     </Modal>
   );
@@ -184,6 +207,13 @@ const styles = StyleSheet.create({
   },
   selectedThumbnail: {
     opacity: 0.7,
+  },
+  actionsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 10,
+    marginHorizontal: 10,
   },
 });
 

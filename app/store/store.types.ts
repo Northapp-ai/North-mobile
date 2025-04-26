@@ -4,6 +4,8 @@ export type AuthStore = {
   isAuthenticated: boolean;
   user: User;
   setUser: (user: any) => void;
+  setUserProfilePhoto: (profilePhoto: string) => void;
+  setUserBio: (profilePhoto: string) => void;
 };
 
 export type UsersStore = {
@@ -11,7 +13,7 @@ export type UsersStore = {
   addUser: (user: any) => void;
 };
 
-export type StepGoal = 'photo' | 'name' | 'date' | 'review';
+export type StepGoal = "photo" | "name" | "date" | "review";
 
 export type GoalActions = {
   setCurrentGoal: () => void;
@@ -20,13 +22,12 @@ export type GoalActions = {
   updateCurrentGoal: (dataGoal: Goal) => void;
   addGoal: (goal: Goal) => void;
   updateGoal: (dataGoal: Goal) => void;
-}
+};
 
 export type GoalStore = {
-  currentStep: StepGoal,
+  currentStep: StepGoal;
   goals: Goal[];
   currentGoal: Partial<Goal>;
 } & GoalActions;
-
 
 export type AppStore = AuthStore & UsersStore & GoalStore;

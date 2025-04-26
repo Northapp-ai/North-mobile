@@ -82,8 +82,17 @@ const CustomGalleryModal = ({
     });
 
     if (!result.canceled) {
-      const uris = result.assets.map((asset) => asset.uri);
-      setPhotos((prev) => [...prev, ...uris]);
+      const images = result.assets.map((image) => ({
+        ...image,
+        id: image.assetId,
+      }));
+      const isImageAlreadyAdded = (image: ImagePicker.ImagePickerAsset) => {
+        return photos.some((photo) => photo.id === image.assetId);
+      };
+      const uniqueImages = images.filter(
+        (image) => !isImageAlreadyAdded(image)
+      );
+      setPhotos((prev) => [...prev, ...uniqueImages]);
     }
   };
 

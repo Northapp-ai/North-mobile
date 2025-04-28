@@ -4,6 +4,8 @@ export type User = {
   email: string;
   password: string;
   fullName: string;
+  profilePhoto?: string;
+  bio?: string;
 };
 
 export type SignUpForm = User & {
@@ -15,4 +17,4 @@ export type Goal = {
   name: string;
   uri: string;
   dueDate: Date;
-}
+};

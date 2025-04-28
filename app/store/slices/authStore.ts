@@ -10,4 +10,16 @@ export const useAuthStore: StateCreator<AuthStore> = (set) => ({
       return { ...state, user };
     });
   },
+  setUserProfilePhoto: (profilePhoto: string) => {
+    set((state) => {
+      const user = { ...state.user, profilePhoto };
+      return { ...state, user };
+    });
+  },
+  setUserBio: (bio: string) => {
+    set((state) => {
+      const user = { ...state.user, bio };
+      return { ...state, user };
+    });
+  },
 });

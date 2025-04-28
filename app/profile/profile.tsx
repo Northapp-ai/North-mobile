@@ -18,18 +18,20 @@ import { useAppStore } from "../store";
 import { Goal } from "../auth/models/types";
 import CustomGalleryModal from "@/components/customGaleryModal";
 import type * as MediaLibrary from "expo-media-library";
+
 import GoalName from "../goal/GoalName";
 import GoalFlowScreen from "../goal/GoalFlowScreen";
+import ProfilePhoto from "./_components/ProfilePhoto";
 
 const ProfileScreen = () => {
-  const maxCards = 6
+  const maxCards = 6;
 
   const [visibleModal, setVisibleModal] = useState(false);
-  const [dataGoals, setDataGoals] = useState<Goal[]>(Array(maxCards).fill(null));
+  const [dataGoals, setDataGoals] = useState<Goal[]>(
+    Array(maxCards).fill(null)
+  );
   const goalsList = useAppStore((state) => state.goals);
-  const user = useAppStore((state) => state.user);
   const addCurrentGoal = useAppStore((state) => state.addCurrentGoal);
-
   useEffect(() => {
     const cardAvoid = maxCards - goalsList.length;
 
@@ -51,23 +53,24 @@ const ProfileScreen = () => {
 
   const handleSelectImage = async (uri: string) => {
     if (!uri) {
-      setVisibleModal(true)
+      setVisibleModal(true);
     }
-  }
+  };
 
-  const handledAddImage = (image: MediaLibrary.AssetInfo | MediaLibrary.Asset) => {
-
+  const handledAddImage = (
+    image: MediaLibrary.AssetInfo | MediaLibrary.Asset
+  ) => {
     const dataCurrentGoal: Goal = {
       id: Date.now().toString(),
-      name: '',
-      uri:  image.localUri || image.uri,
+      name: "",
+      uri: image.localUri || image.uri,
       dueDate: new Date(),
-    }
+    };
 
     addCurrentGoal({ ...dataCurrentGoal });
-    setVisibleModal(false)
-    router.push({ pathname: "/goal/GoalName" })
-  }
+    setVisibleModal(false);
+    router.push({ pathname: "/goal/GoalName" });
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -77,13 +80,7 @@ const ProfileScreen = () => {
         <LogoutButton onLogout={handleLogout} />
       </View>
 
-      <View style={styles.profileContainer}>
-        <View style={styles.avatarContainer}>
-          <Ionicons name="person-outline" size={30} />
-        </View>
-        <Text style={styles.profileName}>{user.fullName}</Text>
-        <Text style={styles.profileDescription}>Description</Text>
-      </View>
+      <ProfilePhoto />
 
       {/* TODO: Crear tabs para ver las estadisticas de los usuarios */}
       <View style={styles.statsContainer}>
@@ -104,7 +101,9 @@ const ProfileScreen = () => {
               styles.card,
               index % 3 === 0 ? styles.largeCard : styles.smallCard,
             ]}
-            onPress={() => { handleSelectImage(data?.uri) }}
+            onPress={() => {
+              handleSelectImage(data?.uri);
+            }}
           >
             {data ? (
               <View style={styles.imageContainer}>
@@ -126,10 +125,11 @@ const ProfileScreen = () => {
         ))}
       </View>
 
-    <CustomGalleryModal
-      visible={visibleModal}
-      onClose={() => setVisibleModal(false)}
-      onNext={handledAddImage} />
+      <CustomGalleryModal
+        visible={visibleModal}
+        onClose={() => setVisibleModal(false)}
+        onNext={handledAddImage}
+      />
     </ScrollView>
   );
 };
@@ -145,26 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
-  profileContainer: {
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  avatarContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#ddd",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  profileDescription: {
-    color: "#888",
-  },
+
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -213,29 +194,29 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   imageContainer: {
-    width: '100%',
-    height: '100%',
-    alignSelf: 'center',
-    position: 'relative',
+    width: "100%",
+    height: "100%",
+    alignSelf: "center",
+    position: "relative",
     borderRadius: 16,
     shadowOpacity: 0.08,
     shadowRadius: 6,
   },
   footerOverlay: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    width: '100%',
+    width: "100%",
     paddingVertical: 10,
     paddingHorizontal: 15,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backgroundColor: "rgba(0, 0, 0, 0.45)",
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
   footerText: {
-    color: '#fff',
-    fontFamily: 'Inter_600SemiBold',
+    color: "#fff",
+    fontFamily: "Inter_600SemiBold",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

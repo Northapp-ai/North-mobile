@@ -97,12 +97,11 @@ const CustomGalleryModal = ({
 
       if (uniqueImages.length > 0) {
         setPhotos((prev) => [...prev, ...uniqueImages]);
-        // 1. Save each picked image to media library
+        // Save each picked image to media library
         const newUris = uniqueImages.map((image) => image.uri);
         await Promise.all(
           newUris.map((uri) => MediaLibrary.createAssetAsync(uri))
         );
-        await fetchPhotos();
       }
     }
   };

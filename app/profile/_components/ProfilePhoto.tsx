@@ -21,7 +21,7 @@ export default function ProfilePhoto() {
   const {
     profilePhoto,
     fullName,
-    bio = "Add yor bio here",
+    bio = "",
   } = useAppStore((state) => state.user);
 
   const handleAddProfilePhoto = (imageSelected: MediaLibrary.Asset) => {
@@ -49,7 +49,9 @@ export default function ProfilePhoto() {
         <Text style={styles.profileName}>{fullName}</Text>
         {!isEditing ? (
           <TouchableOpacity onPress={() => setIsEditing(true)}>
-            <Text style={styles.profileDescription}>{bio}</Text>
+            <Text style={styles.profileDescription}>
+              {bio || "Add yor bio her.."}
+            </Text>
           </TouchableOpacity>
         ) : (
           <TextInput

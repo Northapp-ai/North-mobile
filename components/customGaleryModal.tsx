@@ -34,8 +34,10 @@ const CustomGalleryModal = ({
   const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    requestMediaPermissions();
-  }, []);
+    if (visible) {
+      requestMediaPermissions();
+    }
+  }, [visible]);
 
   // useEffect(() => {
   //   initializeData();

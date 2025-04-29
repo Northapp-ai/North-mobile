@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Image,
   Alert,
+  ImageBackground,
 } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,13 +18,11 @@ import { useAppStore } from "../store";
 import { Goal } from "../auth/models/types";
 import CustomGalleryModal from "@/components/customGaleryModal";
 import type * as MediaLibrary from "expo-media-library";
-
-import GoalName from "../goal/GoalName";
-import GoalFlowScreen from "../goal/GoalFlowScreen";
+import { LinearGradient } from "expo-linear-gradient";
 import ProfilePhoto from "./_components/ProfilePhoto";
 
 const ProfileScreen = () => {
-  const maxCards = 6;
+  const maxCards = 5
 
   const [visibleModal, setVisibleModal] = useState(false);
   const [dataGoals, setDataGoals] = useState<Goal[]>(
@@ -62,7 +60,7 @@ const ProfileScreen = () => {
   ) => {
     const dataCurrentGoal: Goal = {
       id: Date.now().toString(),
-      name: "",
+      name: '',
       uri: image.localUri || image.uri,
       dueDate: new Date(),
     };
@@ -71,6 +69,44 @@ const ProfileScreen = () => {
     setVisibleModal(false);
     router.push({ pathname: "/goal/GoalName" });
   };
+
+  const leftColumn = dataGoals.filter((_, i) => i % 2 === 0);
+  const rightColumn = dataGoals.filter((_, i) => i % 2 !== 0);
+
+  const renderCard = (data: Goal | null, index: number, isLargeCard: boolean = false) => (
+    <TouchableOpacity
+      key={index}
+      style={[styles.card, isLargeCard ? styles.largeCard : styles.smallCard]}
+      onPress={() => handleSelectImage(data?.uri)}
+    >
+      {data ? (
+        <View style={styles.imageContainer}>
+          <ImageBackground
+            source={{ uri: data.uri }}
+            style={styles.image}
+          >
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.8)']}
+              style={styles.gradient}
+              start={{ x: 0.5, y: 0.3 }}
+              end={{ x: 0.5, y: 1 }}
+            />
+            <View style={styles.footerOverlay}>
+              <Text
+
+                style={styles.footerText}
+              >
+                {data.name}
+              </Text>
+            </View>
+          </ImageBackground>
+        </View>
+      ) : (
+        <Ionicons name="add" size={24} color="#888" />
+      )}
+    </TouchableOpacity>
+  );
+
 
   return (
     <ScrollView style={styles.container}>
@@ -93,43 +129,19 @@ const ProfileScreen = () => {
       </View>
 
       <Text style={styles.yearText}>2024</Text>
-      <View style={styles.cardsContainer}>
-        {dataGoals.map((data, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.card,
-              index % 3 === 0 ? styles.largeCard : styles.smallCard,
-            ]}
-            onPress={() => {
-              handleSelectImage(data?.uri);
-            }}
-          >
-            {data ? (
-              <View style={styles.imageContainer}>
-                <Image source={{ uri: data.uri }} style={styles.image} />
-                <View style={styles.footerOverlay}>
-                  <Text
-                    style={styles.footerText}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {data.name}
-                  </Text>
-                </View>
-              </View>
-            ) : (
-              <Ionicons name="add" size={24} color="#888" />
-            )}
-          </TouchableOpacity>
-        ))}
+      <View style={styles.columnsWrapper}>
+        <View style={styles.column}>
+          {leftColumn.map((goal, index) => renderCard(goal, index * 2))}
+        </View>
+        <View style={styles.column}>
+          {rightColumn.map((goal, index) => renderCard(goal, index * 2 + 1, true))}
+        </View>
       </View>
 
       <CustomGalleryModal
         visible={visibleModal}
         onClose={() => setVisibleModal(false)}
-        onNext={handledAddImage}
-      />
+        onNext={handledAddImage} />
     </ScrollView>
   );
 };
@@ -145,7 +157,31 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
+  profileContainer: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
 
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  avatarContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#ddd",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+  profileDescription: {
+    color: "#888",
+  },
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -172,51 +208,53 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
+
+  columnsWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  column: {
+    width: '48%',
+  },
+
   card: {
-    backgroundColor: "#eee",
     borderRadius: 20,
+    backgroundColor: "#D9D9D9",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
+    overflow: 'hidden',
   },
   smallCard: {
-    width: "48%",
-    height: 120,
+    height: 180,
   },
   largeCard: {
-    width: "100%",
-    height: 150,
+    height: 277,
   },
+
   image: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
-    borderRadius: 20,
   },
   imageContainer: {
     width: "100%",
     height: "100%",
-    alignSelf: "center",
-    position: "relative",
-    borderRadius: 16,
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   footerOverlay: {
     position: "absolute",
     bottom: 0,
-    width: "100%",
-    paddingVertical: 10,
+    width: '100%',
+    paddingVertical: 14,
     paddingHorizontal: 15,
-    backgroundColor: "rgba(0, 0, 0, 0.45)",
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
   },
   footerText: {
     color: "#fff",
     fontFamily: "Inter_600SemiBold",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
+    letterSpacing: -0.5,
   },
 });
 

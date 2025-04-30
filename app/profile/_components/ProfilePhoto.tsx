@@ -74,9 +74,8 @@ export default function ProfilePhoto() {
 
 const styles = StyleSheet.create({
   profileContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 20,
+    marginVertical: 27,
+    marginHorizontal: 28,
   },
   avatarContainer: {
     width: 60,
@@ -93,9 +92,10 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   profileName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
+    fontSize: 24,
+    fontFamily: "Inter_600SemiBold",
+    marginTop: 12,
+    letterSpacing: -0.96,
   },
   profileDescription: {
     color: "#888",

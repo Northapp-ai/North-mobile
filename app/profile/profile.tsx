@@ -86,7 +86,7 @@ const ProfileScreen = () => {
             style={styles.image}
           >
             <LinearGradient
-              colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.8)']}
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
               style={styles.gradient}
               start={{ x: 0.5, y: 0.3 }}
               end={{ x: 0.5, y: 1 }}
@@ -110,10 +110,11 @@ const ProfileScreen = () => {
       <StatusBar style="dark" />
 
       <View style={styles.headerContainer}>
-        <LogoutButton onLogout={handleLogout} />
+        <ProfilePhoto />
+        <View>
+          <LogoutButton onLogout={handleLogout} />
+        </View>
       </View>
-
-      <ProfilePhoto />
 
       {/* TODO: Crear tabs para ver las estadisticas de los usuarios */}
       <View style={styles.statsContainer}>
@@ -151,12 +152,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  profileContainer: {
-    alignItems: "center",
-    marginVertical: 20,
+    justifyContent: "space-between",
   },
 
   gradient: {

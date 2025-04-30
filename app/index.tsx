@@ -10,8 +10,8 @@ import useLoadFonts from "./hooks/useLoadFonts";
 import Button from "./components/Button";
 
 export default function Index() {
-  const { loaded, error } = useLoadFonts();
-  if (!loaded && !error) {
+  const { fontsLoaded, fontsError } = useLoadFonts();
+  if (!fontsLoaded && !fontsError) {
     return null;
   }
 

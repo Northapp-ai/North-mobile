@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
+import { StatusBar } from "expo-status-bar";
 
 type CustomGalleryModalProps = {
   visible: boolean;
@@ -136,8 +137,9 @@ const CustomGalleryModal = ({
   };
 
   return (
-    <Modal visible={visible} animationType="none">
+    <Modal visible={visible} animationType="fade" transparent>
       <SafeAreaView style={styles.modalContent}>
+        <StatusBar translucent backgroundColor="transparent" />
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.actionText}>Cancel</Text>
@@ -168,25 +170,28 @@ const CustomGalleryModal = ({
           </View>
         </View>
         {photos.length > 0 && (
-          <FlatList
-            data={photos}
-            numColumns={4}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => setSelectedPhoto(item)}>
-                <Image
-                  source={{ uri: item.localUri || item.uri }}
-                  style={[
-                    styles.thumbnail,
-                    selectedPhoto?.id === item.id && styles.selectedThumbnail,
-                  ]}
-                />
-              </TouchableOpacity>
-            )}
-            onEndReached={loadMorePhotos}
-            onEndReachedThreshold={0.7}
+          <View style={styles.galleryContainer}>
+            <FlatList
+              data={photos}
+              numColumns={4}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => setSelectedPhoto(item)}>
+                  <Image
+                    source={{ uri: item.localUri || item.uri }}
+                    style={[
+                      styles.thumbnail,
+                      selectedPhoto?.id === item.id && styles.selectedThumbnail,
+                    ]}
+                  />
+                </TouchableOpacity>
+              )}
+              onEndReached={loadMorePhotos}
+              onEndReachedThreshold={0.7}
             // ListFooterComponent={loadingMore ? <ActivityIndicator size="small" /> : null}
-          />
+            />
+          </View>
+
         )}
       </SafeAreaView>
     </Modal>
@@ -194,6 +199,9 @@ const CustomGalleryModal = ({
 };
 
 const styles = StyleSheet.create({
+  galleryContainer: {
+    backgroundColor: "transparent",
+  },
   modalContent: {
     flex: 1,
     backgroundColor: "#fff",

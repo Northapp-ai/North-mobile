@@ -92,10 +92,7 @@ const ProfileScreen = () => {
               end={{ x: 0.5, y: 1 }}
             />
             <View style={styles.footerOverlay}>
-              <Text
-
-                style={styles.footerText}
-              >
+              <Text style={styles.footerText}>
                 {data.name}
               </Text>
             </View>
@@ -128,7 +125,7 @@ const ProfileScreen = () => {
         ))}
       </View>
 
-      <Text style={styles.yearText}>2024</Text>
+      <Text style={styles.yearText}>2025</Text>
       <View style={styles.columnsWrapper}>
         <View style={styles.column}>
           {leftColumn.map((goal, index) => renderCard(goal, index * 2))}
@@ -192,16 +189,22 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Inter_600SemiBold",
+    paddingBottom: 2,
   },
   statLabel: {
-    color: "#888",
+    color: "#00000",
+    fontSize: 9,
+    fontFamily: "Ubuntu_400Regular",
   },
   yearText: {
     fontSize: 18,
-    fontWeight: "bold",
     textAlign: "right",
     marginVertical: 10,
+    fontFamily: "Inter_500Medium",
+    marginHorizontal: 15,
+    marginTop: 20,
+    marginBottom: 20,
   },
   cardsContainer: {
     flexDirection: "row",
@@ -246,7 +249,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: '100%',
-    paddingVertical: 14,
+    paddingVertical: 20,
     paddingHorizontal: 15,
   },
   footerText: {

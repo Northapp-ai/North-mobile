@@ -11,7 +11,8 @@
     "web:develop": "EXPO_PUBLIC_ENVIRONMENT=development expo start --web",
     "test": "jest --watchAll",
     "lint": "eslint 'app/**/*.{ts,tsx}'",
-    "lint:fix": "eslint 'app/**/*.{ts,tsx}' --fix"
+    "lint:fix": "eslint 'app/**/*.{ts,tsx}' --fix",
+    "clean": "rm -rf node_modules package-lock.json yarn.lock .expo .expo-shared && npm cache clean --force && rm -rf $TMPDIR/metro-* $TMPDIR/haste-map-* $TMPDIR/react-* && watchman watch-del-all 2>/dev/null || true && yarn cache clean || true"
   },
   "jest": {
     "preset": "jest-expo"

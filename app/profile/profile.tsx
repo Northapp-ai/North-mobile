@@ -99,7 +99,7 @@ const ProfileScreen = () => {
           </ImageBackground>
         </View>
       ) : (
-        <Ionicons name="add" size={24} color="#888" />
+        <Ionicons name="add" size={36} color="#fff" />
       )}
     </TouchableOpacity>
   );
@@ -148,11 +148,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 20,
+    padding: 12,
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginTop: 26,
   },
 
   gradient: {
@@ -178,7 +179,8 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginVertical: 10,
+    marginTop: 20,
+    marginLeft: 10,
   },
   statItem: {
     alignItems: "center",
@@ -187,20 +189,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Inter_600SemiBold",
     paddingBottom: 2,
+    letterSpacing: 0.48
   },
   statLabel: {
     color: "#00000",
     fontSize: 9,
     fontFamily: "Ubuntu_400Regular",
+    letterSpacing: 0.45,
   },
   yearText: {
     fontSize: 18,
     textAlign: "right",
     marginVertical: 10,
     fontFamily: "Inter_500Medium",
-    marginHorizontal: 15,
-    marginTop: 20,
-    marginBottom: 20,
+    marginHorizontal: 25,
+    marginTop: 35,
+    marginBottom: 22,
   },
   cardsContainer: {
     flexDirection: "row",
@@ -245,15 +249,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: '100%',
-    paddingVertical: 20,
-    paddingHorizontal: 15,
+    paddingVertical: 19,
+    paddingHorizontal: 18,
   },
   footerText: {
     color: "#fff",
     fontFamily: "Inter_600SemiBold",
     fontSize: 16,
     fontWeight: '600',
-    letterSpacing: -0.5,
+    letterSpacing: -0.96,
   },
 });
 

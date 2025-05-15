@@ -74,9 +74,7 @@ export default function ProfilePhoto() {
 
 const styles = StyleSheet.create({
   profileContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 20,
+    marginHorizontal: 16,
   },
   avatarContainer: {
     width: 60,
@@ -85,6 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 10,
   },
   thumbnail: {
     width: 60,
@@ -93,11 +92,14 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   profileName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
+    fontSize: 24,
+    fontFamily: "Inter_600SemiBold",
+    letterSpacing: -0.96,
   },
   profileDescription: {
+    fontFamily:'Ubuntu_400Regular',
+    fontSize: 13,
     color: "#888",
+    letterSpacing: 0.13
   },
 });

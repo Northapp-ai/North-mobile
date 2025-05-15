@@ -10,8 +10,8 @@ import useLoadFonts from "./hooks/useLoadFonts";
 import Button from "./components/Button";
 
 export default function Index() {
-  const { loaded, error } = useLoadFonts();
-  if (!loaded && !error) {
+  const { fontsLoaded, fontsError } = useLoadFonts();
+  if (!fontsLoaded && !fontsError) {
     return null;
   }
 
@@ -33,7 +33,7 @@ export default function Index() {
           the age of distraction.
         </Text>
 
-    <Button redirecTo="/auth/login" text="Get started" />
+        <Button redirecTo="/auth/login" text="Get started" />
       </View>
     </ScrollView>
   );

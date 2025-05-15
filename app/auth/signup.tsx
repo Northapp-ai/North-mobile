@@ -1,4 +1,4 @@
-import { Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, View, Alert } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, View, Alert, Platform, KeyboardAvoidingView } from 'react-native';
 import { Controller } from 'react-hook-form';
 import { useSignUpForm } from './hooks/useSignup';
 import { ValidateOtp } from './components/validateOtp';
@@ -16,103 +16,111 @@ const SignUp = () => {
     router.replace(`/auth/login`);
   }
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {step === 'signUp' ? (
-        <>
-          <Text style={styles.title}>Registro</Text>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, error && styles.errorBorder]}
-                  placeholder="Nombre"
-                  value={value}
-                  onChangeText={onChange}
-                  placeholderTextColor="#aaa"
-                  onBlur={onBlur}
-                />
-                {error && <Text style={styles.fieldError}>{error.message}</Text>}
-              </View>
-            )}
-          />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 110 : 0}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        {step === 'signUp' ? (
+          <>
+            <Text style={styles.title}>Registro</Text>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, error && styles.errorBorder]}
+                    placeholder="Nombre"
+                    value={value}
+                    onChangeText={onChange}
+                    placeholderTextColor="#aaa"
+                    onBlur={onBlur}
+                  />
+                  {error && <Text style={styles.fieldError}>{error.message}</Text>}
+                </View>
+              )}
+            />
 
-          <Controller
-            name="lastName"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, error && styles.errorBorder]}
-                  placeholder="Apellido"
-                  value={value}
-                  onChangeText={onChange}
-                  placeholderTextColor="#aaa"
-                  onBlur={onBlur}
-                />
-                {error && <Text style={styles.fieldError}>{error.message}</Text>}
-              </View>
-            )}
-          />
+            <Controller
+              name="lastName"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, error && styles.errorBorder]}
+                    placeholder="Apellido"
+                    value={value}
+                    onChangeText={onChange}
+                    placeholderTextColor="#aaa"
+                    onBlur={onBlur}
+                  />
+                  {error && <Text style={styles.fieldError}>{error.message}</Text>}
+                </View>
+              )}
+            />
 
-          <Controller
-            name="email"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, error && styles.errorBorder]}
-                  placeholder="Email"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={value}
-                  onChangeText={onChange}
-                  placeholderTextColor="#aaa"
-                  onBlur={onBlur}
-                />
-                {error && <Text style={styles.fieldError}>{error.message}</Text>}
-              </View>
-            )}
-          />
+            <Controller
+              name="email"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, error && styles.errorBorder]}
+                    placeholder="Email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={value}
+                    onChangeText={onChange}
+                    placeholderTextColor="#aaa"
+                    onBlur={onBlur}
+                  />
+                  {error && <Text style={styles.fieldError}>{error.message}</Text>}
+                </View>
+              )}
+            />
 
-          <Controller
-            name="password"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, error && styles.errorBorder]}
-                  placeholder="Contraseña"
-                  secureTextEntry
-                  value={value}
-                  onChangeText={onChange}
-                  placeholderTextColor="#aaa"
-                  onBlur={onBlur}
-                />
-                {error && <Text style={styles.fieldError}>{error.message}</Text>}
-              </View>
-            )}
-          />
+            <Controller
+              name="password"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, error && styles.errorBorder]}
+                    placeholder="Contraseña"
+                    secureTextEntry
+                    value={value}
+                    onChangeText={onChange}
+                    placeholderTextColor="#aaa"
+                    onBlur={onBlur}
+                  />
+                  {error && <Text style={styles.fieldError}>{error.message}</Text>}
+                </View>
+              )}
+            />
 
-          {generalError ? <Text style={styles.generalError}>{generalError}</Text> : null}
+            {generalError ? <Text style={styles.generalError}>{generalError}</Text> : null}
 
-          <TouchableOpacity style={styles.button} onPress={handleSubmit(onSignUp)}>
-            <Text style={styles.buttonText}>Registrarse</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <Text style={styles.title}>Confirmar email</Text>
-          <ValidateOtp
-            form={validateCodeForm}
-            email={email}
-            errorMessage={generalError}
-            onConfirm={validateCodeForm.handleSubmit(onValidateCode)}
-          />
-        </>
-      )}
-    </ScrollView>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit(onSignUp)}>
+              <Text style={styles.buttonText}>Registrarse</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <Text style={styles.title}>Confirmar email</Text>
+            <ValidateOtp
+              form={validateCodeForm}
+              email={email}
+              errorMessage={generalError}
+              onConfirm={validateCodeForm.handleSubmit(onValidateCode)}
+            />
+          </>
+        )}
+      </ScrollView>
+
+    </KeyboardAvoidingView>
+
   );
 };
 

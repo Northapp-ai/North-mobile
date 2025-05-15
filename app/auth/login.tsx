@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { ValidateOtp } from "./components/validateOtp";
 import useSignUpForm from "./hooks/useSignup";
 import { ValidateCodeForm } from "./models/signUpSchema";
@@ -24,9 +27,23 @@ const Login = () => {
   const [showOtp, setShowOtp] = useState(false);
   const router = useRouter();
 
+  useFocusEffect(
+    useCallback(() => {
+      resetState();
+    }, [])
+  );
+
   const { onSingIn, onResendSignUpCode } = useAuth();
   const { validateCodeForm, onConfirm } = useSignUpForm();
   const setUser = useAppStore((state) => state.setUser);
+
+  const resetState = () => {
+    setMsgError(undefined);
+    setMsgErrorCode(undefined);
+    setEmail("");
+    setPassword("");
+    setShowOtp(false);
+  }
 
   const handleLogin = async () => {
     setMsgError(undefined);
@@ -74,61 +91,76 @@ const Login = () => {
       }
       setShowOtp(false);
     } catch (error: any) {
-      console.log("error confirmSignUp test", JSON.stringify(error));
       setMsgErrorCode(error.name);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <Text style={styles.title}>Iniciar Sesión</Text>
 
-      {!showOtp && (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            placeholderTextColor="#aaa"
-          />
+          {!showOtp && (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                placeholderTextColor="#aaa"
+              />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            placeholderTextColor="#aaa"
-          />
+              <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                placeholderTextColor="#aaa"
+              />
 
-          {msgError && <Text style={styles.fieldError}>{msgError}</Text>}
+              {msgError && <Text style={styles.fieldError}>{msgError}</Text>}
 
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Iniciar Sesión</Text>
-          </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Iniciar Sesión</Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push("/auth/signup")}>
-            <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
-          </TouchableOpacity>
-        </>
-      )}
+              <TouchableOpacity onPress={() => router.push("/auth/signup")}>
+                <Text style={styles.linkText}>
+                  ¿No tienes cuenta? Regístrate
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
 
-      {showOtp && (
-        <ValidateOtp
-          email={email}
-          onConfirm={validateCodeForm.handleSubmit(handleConfirmCode)}
-          errorMessage={msgErrorCode}
-          form={validateCodeForm}
-        />
-      )}
-    </View>
+          {showOtp && (
+            <ValidateOtp
+              email={email}
+              onConfirm={validateCodeForm.handleSubmit(handleConfirmCode)}
+              errorMessage={msgErrorCode}
+              form={validateCodeForm}
+            />
+          )}
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -138,6 +170,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    fontFamily:"inter",
     fontWeight: "bold",
     marginBottom: 30,
     color: "#333",

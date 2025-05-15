@@ -52,11 +52,8 @@ export default {
         origin: false,
       },
       eas: {
-        // EAS Local
-        // projectId: "eca76976-a644-44e2-bbe3-1863077a4c64"
-
         //EAS remote
-        projectId: "361255d2-7150-4206-8917-09d43327236e",
+        projectId: "b178d6ae-d233-47cf-ab33-00bd3416ee31",
       },
       awsIdentityPoolId: process.env.EXPO_PUBLIC_AWS_IDENTITY_POOL_ID,
       awsUserPoolsId: process.env.EXPO_PUBLIC_AWS_USER_POOLS_ID,
@@ -65,15 +62,7 @@ export default {
       awsRegion: process.env.EXPO_PUBLIC_AWS_REGION,
       environment: ENV,
     },
-    // runtimeVersion: {
-    //   policy: "appVersion"
-    // },
     runtimeVersion: "1.0.0",
-
-    // EAS Local
-    // updates: {
-    //   url: "https://u.expo.dev/eca76976-a644-44e2-bbe3-1863077a4c64"
-    // }
 
     // EAS remote
     updates: {

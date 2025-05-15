@@ -12,6 +12,9 @@
     "test": "jest --watchAll",
     "lint": "eslint 'app/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'app/**/*.{ts,tsx}' --fix",
+    "build:ios": "eas build --platform ios",
+    "build:android": "eas build --platform android",
+    "update:dev": "eas update --branch development",
     "clean": "rm -rf node_modules package-lock.json yarn.lock .expo .expo-shared && npm cache clean --force && rm -rf $TMPDIR/metro-* $TMPDIR/haste-map-* $TMPDIR/react-* && watchman watch-del-all 2>/dev/null || true && yarn cache clean || true"
   },
   "jest": {
@@ -56,11 +59,13 @@
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "zod": "^3.24.2",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "expo-dev-client": "~5.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~19.0.10",
+    "eas-cli": "^16.4.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "typescript": "~5.8.3"

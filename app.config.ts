@@ -8,6 +8,7 @@ export default {
   expo: {
     name: "north-mobile",
     owner: "northappmobile",
+    slug: "north",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
@@ -53,7 +54,7 @@ export default {
       },
       eas: {
         //EAS remote
-        projectId: "b178d6ae-d233-47cf-ab33-00bd3416ee31",
+          projectId: "b178d6ae-d233-47cf-ab33-00bd3416ee31",
       },
       awsIdentityPoolId: process.env.EXPO_PUBLIC_AWS_IDENTITY_POOL_ID,
       awsUserPoolsId: process.env.EXPO_PUBLIC_AWS_USER_POOLS_ID,
@@ -62,11 +63,6 @@ export default {
       awsRegion: process.env.EXPO_PUBLIC_AWS_REGION,
       environment: ENV,
     },
-    runtimeVersion: "1.0.0",
-
-    // EAS remote
-    updates: {
-      url: "https://u.expo.dev/361255d2-7150-4206-8917-09d43327236e",
-    },
+    runtimeVersion: "1.0.0"
   },
 };

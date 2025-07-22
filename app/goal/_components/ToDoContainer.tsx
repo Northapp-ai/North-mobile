@@ -16,7 +16,6 @@ export default function ToDoContainer({ title, items }: Props) {
           name="plus"
           size={24}
           color="black"
-          style={styles.plusButton}
         />
         <Text style={styles.title}>{title}</Text>
       </View>
@@ -37,9 +36,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-  },
-  plusButton: {
-    cursor: "pointer",
   },
   title: {
     fontSize: 16,

@@ -2,21 +2,21 @@ import { StateCreator } from "zustand";
 import { GoalStore, StepGoal } from "../store.types";
 import { Goal } from "@/app/auth/models/types";
 
-const initialState:GoalStore = {
+const initialState: GoalStore = {
   goals: [],
   currentGoal: {},
   currentStep: "photo",
-  setCurrentGoal: () => {},
+  resetCurrentGoal: () => {},
   addCurrentGoal: (goal: Goal) => {},
   updateCurrentGoal: (dataGoal: Goal) => {},
   updateCurrentStep: (step: StepGoal) => {},
   addGoal: (goal: Goal) => {},
   updateGoal: (dataGoal: Goal) => {},
-}
+};
 
 export const useGoalStore: StateCreator<GoalStore> = (set) => ({
   ...initialState,
-  setCurrentGoal: () => {
+  resetCurrentGoal: () => {
     set((state) => {
       return { ...state, currentGoal: {} };
     });

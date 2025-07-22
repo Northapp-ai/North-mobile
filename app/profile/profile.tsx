@@ -20,9 +20,11 @@ import CustomGalleryModal from "@/components/customGaleryModal";
 import type * as MediaLibrary from "expo-media-library";
 import { LinearGradient } from "expo-linear-gradient";
 import ProfilePhoto from "./_components/ProfilePhoto";
+import ButtonNorth from "../components/Button";
+import TabsNavigation from "../components/TabsNavigation";
 
 const ProfileScreen = () => {
-  const maxCards = 5
+  const maxCards = 5;
 
   const [visibleModal, setVisibleModal] = useState(false);
   const [dataGoals, setDataGoals] = useState<Goal[]>(
@@ -49,10 +51,12 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleSelectImage = async (uri: string) => {
-    if (!uri) {
-      setVisibleModal(true);
+  const handleSelectImage = async (goal: Goal) => {
+    if (!goal?.uri) {
+      return setVisibleModal(true);
     }
+    addCurrentGoal({ ...goal });
+    router.push({ pathname: "/goal/GoalDetails" });
   };
 
   const handledAddImage = (
@@ -60,7 +64,7 @@ const ProfileScreen = () => {
   ) => {
     const dataCurrentGoal: Goal = {
       id: Date.now().toString(),
-      name: '',
+      name: "",
       uri: image.localUri || image.uri,
       dueDate: new Date(),
     };
@@ -73,28 +77,27 @@ const ProfileScreen = () => {
   const leftColumn = dataGoals.filter((_, i) => i % 2 === 0);
   const rightColumn = dataGoals.filter((_, i) => i % 2 !== 0);
 
-  const renderCard = (data: Goal | null, index: number, isLargeCard: boolean = false) => (
+  const renderCard = (
+    data: Goal,
+    index: number,
+    isLargeCard: boolean = false
+  ) => (
     <TouchableOpacity
       key={index}
       style={[styles.card, isLargeCard ? styles.largeCard : styles.smallCard]}
-      onPress={() => handleSelectImage(data?.uri)}
+      onPress={() => handleSelectImage(data)}
     >
       {data ? (
         <View style={styles.imageContainer}>
-          <ImageBackground
-            source={{ uri: data.uri }}
-            style={styles.image}
-          >
+          <ImageBackground source={{ uri: data.uri }} style={styles.image}>
             <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
+              colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.8)"]}
               style={styles.gradient}
               start={{ x: 0.5, y: 0.3 }}
               end={{ x: 0.5, y: 1 }}
             />
             <View style={styles.footerOverlay}>
-              <Text style={styles.footerText}>
-                {data.name}
-              </Text>
+              <Text style={styles.footerText}>{data.name}</Text>
             </View>
           </ImageBackground>
         </View>
@@ -103,7 +106,6 @@ const ProfileScreen = () => {
       )}
     </TouchableOpacity>
   );
-
 
   return (
     <ScrollView style={styles.container}>
@@ -117,14 +119,7 @@ const ProfileScreen = () => {
       </View>
 
       {/* TODO: Crear tabs para ver las estadisticas de los usuarios */}
-      <View style={styles.statsContainer}>
-        {["GOALS", "ACHIEVED", "HABITS", "PARTNERS"].map((item, index) => (
-          <View key={index} style={styles.statItem}>
-            <Text style={styles.statNumber}>0</Text>
-            <Text style={styles.statLabel}>{item}</Text>
-          </View>
-        ))}
-      </View>
+      <TabsNavigation items={["GOALS", "ACHIEVED", "HABITS", "PARTNERS"]} />
 
       <Text style={styles.yearText}>2025</Text>
       <View style={styles.columnsWrapper}>
@@ -132,14 +127,17 @@ const ProfileScreen = () => {
           {leftColumn.map((goal, index) => renderCard(goal, index * 2))}
         </View>
         <View style={styles.column}>
-          {rightColumn.map((goal, index) => renderCard(goal, index * 2 + 1, true))}
+          {rightColumn.map((goal, index) =>
+            renderCard(goal, index * 2 + 1, true)
+          )}
         </View>
       </View>
 
       <CustomGalleryModal
         visible={visibleModal}
         onClose={() => setVisibleModal(false)}
-        onNext={handledAddImage} />
+        onNext={handledAddImage}
+      />
     </ScrollView>
   );
 };
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Inter_600SemiBold",
     paddingBottom: 2,
-    letterSpacing: 0.48
+    letterSpacing: 0.48,
   },
   statLabel: {
     color: "#00000",
@@ -213,11 +211,11 @@ const styles = StyleSheet.create({
   },
 
   columnsWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   column: {
-    width: '48%',
+    width: "48%",
   },
 
   card: {
@@ -226,7 +224,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   smallCard: {
     height: 180,
@@ -243,12 +241,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   footerOverlay: {
     position: "absolute",
     bottom: 0,
-    width: '100%',
+    width: "100%",
     paddingVertical: 19,
     paddingHorizontal: 18,
   },
@@ -256,7 +254,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontFamily: "Inter_600SemiBold",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     letterSpacing: -0.96,
   },
 });

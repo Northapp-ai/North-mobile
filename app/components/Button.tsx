@@ -6,7 +6,7 @@ type ButtonProps = {
   text: string;
 };
 
-export default function Button({ redirecTo, text }: ButtonProps) {
+export default function ButtonNorth({ redirecTo, text }: ButtonProps) {
   return (
     <View style={styles.mainButtonContainer}>
       <Pressable

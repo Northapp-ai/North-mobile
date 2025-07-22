@@ -16,7 +16,7 @@ export type UsersStore = {
 export type StepGoal = "photo" | "name" | "date" | "review";
 
 export type GoalActions = {
-  setCurrentGoal: () => void;
+  resetCurrentGoal: () => void;
   updateCurrentStep: (step: StepGoal) => void;
   addCurrentGoal: (goal: Goal) => void;
   updateCurrentGoal: (dataGoal: Goal) => void;

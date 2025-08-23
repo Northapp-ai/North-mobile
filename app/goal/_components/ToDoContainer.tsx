@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import ToDoItem from "./ToDoItem";
 import { AntDesign } from "@expo/vector-icons";
 import { ToDoItemType } from "./Item.types";
+import { useState } from "react";
+import { ActionModal } from "./ActionModal/index.ts";
 
 type Props = {
   title: string;
@@ -9,19 +11,26 @@ type Props = {
 };
 
 export default function ToDoContainer({ title, items }: Props) {
+  const [isActionModalVisible, setIsActionModalVisible] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <AntDesign
-          name="plus"
-          size={24}
-          color="black"
-        />
+        <Pressable
+          onPress={() => {
+            setIsActionModalVisible(true);
+          }}
+        >
+          <AntDesign name="plus" size={24} color="black" />
+        </Pressable>
         <Text style={styles.title}>{title}</Text>
       </View>
       {items.map((item, index) => {
         return <ToDoItem title={item.title} hour={item.hour} key={index} />;
       })}
+      <ActionModal
+        visible={isActionModalVisible}
+        onClose={() => setIsActionModalVisible(false)}
+      />
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import { Goal, User } from "@/app/auth/models/types";
+import { Goal, GoalAction, User } from "@/app/auth/models/types";
 
 export type AuthStore = {
   isAuthenticated: boolean;
@@ -23,6 +23,7 @@ export type GoalActions = {
   updateCurrentGoal: (dataGoal: Goal) => void;
   addGoal: (goal: Goal) => void;
   updateGoal: (dataGoal: Goal) => void;
+  addActionToSelectedGoal: (action: GoalAction) => void;
 };
 
 export type GoalStore = {

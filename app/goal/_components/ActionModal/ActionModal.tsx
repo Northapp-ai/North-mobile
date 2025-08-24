@@ -7,6 +7,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
 } from "react-native";
+import { generateShortId } from "@/app/utils/idGenerator";
 import { ActionModalProps } from "./types";
 import { MOCK_PEOPLE } from "./constants";
 import { useActionModalState } from "../../_hooks/useActionModalState";
@@ -15,9 +16,14 @@ import { TabContentSection } from "./TabContentSection";
 import { InputSection } from "./InputSection";
 import { DateTimePickerComponent } from "./DateTimePickerComponent";
 import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
+import { GoalAction, User } from "@/app/auth/models/types";
+import { useAppStore } from "@/app/store";
 
 export function ActionModal({ visible, onClose }: ActionModalProps) {
   const currentGoal = useSelectedGoal();
+  const addActionToSelectedGoal = useAppStore(
+    (state) => state.addActionToSelectedGoal
+  );
   const {
     inputText,
     activeTab,
@@ -37,8 +43,17 @@ export function ActionModal({ visible, onClose }: ActionModalProps) {
   };
 
   const handleSend = () => {
-    // TODO: Implement send functionality
-    console.log("Send:", inputText);
+    if (!inputText.trim()) return; // Don't send empty actions
+
+    const action: GoalAction = {
+      id: generateShortId(),
+      description: inputText,
+      completed: false,
+      date: selectedDate,
+      user: {} as User,
+    };
+    addActionToSelectedGoal(action);
+    handleClose();
   };
 
   return (

@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 import { GoalStore, StepGoal } from "../store.types";
-import { Goal } from "@/app/auth/models/types";
+import { Goal, GoalAction } from "@/app/auth/models/types";
 
 const initialState: GoalStore = {
   goals: [],
@@ -14,6 +14,7 @@ const initialState: GoalStore = {
   addGoal: (goal: Goal) => {},
   updateGoal: (dataGoal: Goal) => {},
   setGoalSelectedId: (id: string) => {},
+  addActionToSelectedGoal: (action: GoalAction) => {},
 };
 
 export const useGoalStore: StateCreator<GoalStore> = (set) => ({
@@ -54,6 +55,22 @@ export const useGoalStore: StateCreator<GoalStore> = (set) => ({
   setGoalSelectedId(id) {
     set((state) => {
       return { ...state, goalSelectedId: id };
+    });
+  },
+  addActionToSelectedGoal(action: GoalAction) {
+    set((state) => {
+      const goal = state.goals.find((goal) => goal.id === state.goalSelectedId);
+      if (goal) {
+        const updatedGoal = {
+          ...goal,
+          actions: [...(goal.actions || []), action],
+        };
+        const goals = state.goals.map((g) =>
+          g.id === updatedGoal.id ? updatedGoal : g
+        );
+        return { ...state, goals };
+      }
+      return state;
     });
   },
 });

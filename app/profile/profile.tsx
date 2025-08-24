@@ -32,6 +32,8 @@ const ProfileScreen = () => {
   );
   const goalsList = useAppStore((state) => state.goals);
   const addCurrentGoal = useAppStore((state) => state.addCurrentGoal);
+  const setGoalSelectedId = useAppStore((state) => state.setGoalSelectedId);
+
   useEffect(() => {
     const cardAvoid = maxCards - goalsList.length;
 
@@ -55,7 +57,7 @@ const ProfileScreen = () => {
     if (!goal?.uri) {
       return setVisibleModal(true);
     }
-    addCurrentGoal({ ...goal });
+    setGoalSelectedId(goal.id);
     router.push({ pathname: "/goal/GoalDetails" });
   };
 

@@ -4,6 +4,7 @@ import { Goal } from "@/app/auth/models/types";
 
 const initialState: GoalStore = {
   goals: [],
+  goalSelectedId: "",
   currentGoal: {},
   currentStep: "photo",
   resetCurrentGoal: () => {},
@@ -12,6 +13,7 @@ const initialState: GoalStore = {
   updateCurrentStep: (step: StepGoal) => {},
   addGoal: (goal: Goal) => {},
   updateGoal: (dataGoal: Goal) => {},
+  setGoalSelectedId: (id: string) => {},
 };
 
 export const useGoalStore: StateCreator<GoalStore> = (set) => ({
@@ -49,4 +51,23 @@ export const useGoalStore: StateCreator<GoalStore> = (set) => ({
       return { ...state, goals };
     });
   },
+  setGoalSelectedId(id) {
+    set((state) => {
+      return { ...state, goalSelectedId: id };
+    });
+  },
 });
+
+// SELECTORS
+export const selectCurrentGoal = (state: GoalStore) => state.currentGoal;
+
+export const selectSelectedGoalId = (state: GoalStore) => state.goalSelectedId;
+
+export const selectSelectedGoal = (state: GoalStore) => {
+  if (!state.goalSelectedId) return null;
+  return state.goals.find((goal) => goal.id === state.goalSelectedId) || null;
+};
+
+export const selectAllGoals = (state: GoalStore) => state.goals;
+
+export const selectCurrentStep = (state: GoalStore) => state.currentStep;

@@ -19,6 +19,7 @@ export type GoalActions = {
   resetCurrentGoal: () => void;
   updateCurrentStep: (step: StepGoal) => void;
   addCurrentGoal: (goal: Goal) => void;
+  setGoalSelectedId: (id: string) => void;
   updateCurrentGoal: (dataGoal: Goal) => void;
   addGoal: (goal: Goal) => void;
   updateGoal: (dataGoal: Goal) => void;
@@ -27,6 +28,7 @@ export type GoalActions = {
 export type GoalStore = {
   currentStep: StepGoal;
   goals: Goal[];
+  goalSelectedId: string;
   currentGoal: Partial<Goal>;
 } & GoalActions;
 

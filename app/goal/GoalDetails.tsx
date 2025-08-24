@@ -6,10 +6,10 @@ import {
   Text,
   View,
 } from "react-native";
-import { useAppStore } from "../store";
 import TabsNavigation from "../components/TabsNavigation";
 import ToDoContainer from "./_components/ToDoContainer";
 import { ToDoItemType } from "./_components/Item.types";
+import { useSelectedGoal } from "../store/hooks/useGoalSelectors";
 
 const today: ToDoItemType[] = [
   { title: "Share North profile with Rachel", hour: "18.00" },
@@ -18,25 +18,33 @@ const today: ToDoItemType[] = [
 ];
 
 export default function GoalDetails() {
-  const currentGoal = useAppStore((state) => state.currentGoal);
+  const currentGoal = useSelectedGoal();
+  const actions = (currentGoal?.actions ?? []).map((action) => ({
+    title: action.description,
+    hour: action.date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+  })) as ToDoItemType[];
+
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: currentGoal.uri }} style={styles.image} />
+          <Image source={{ uri: currentGoal?.uri }} style={styles.image} />
           <View style={styles.footerOverlay}>
             <Text
               style={styles.footerText}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {currentGoal.name}
+              {currentGoal?.name}
             </Text>
           </View>
         </View>
       </View>
       <TabsNavigation items={["TO DO", "DONE", "PARTNER"]} />
-      <ToDoContainer title="TODAY" items={today} />
+      <ToDoContainer title="TODAY" items={actions} />
       <ToDoContainer title="TOMORROW" items={[]} />
     </ScrollView>
   );

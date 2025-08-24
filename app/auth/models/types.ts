@@ -17,4 +17,13 @@ export type Goal = {
   name: string;
   uri: string;
   dueDate: Date;
+  actions: GoalAction[];
+};
+
+export type GoalAction = {
+  id: string;
+  description: string;
+  completed: boolean;
+  date: Date;
+  user: User;
 };

@@ -1,4 +1,3 @@
-import { useAppStore } from "@/app/store";
 import React from "react";
 import {
   Modal,
@@ -15,9 +14,10 @@ import { TabNavigation } from "./TabNavigation";
 import { TabContentSection } from "./TabContentSection";
 import { InputSection } from "./InputSection";
 import { DateTimePickerComponent } from "./DateTimePickerComponent";
+import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
 
 export function ActionModal({ visible, onClose }: ActionModalProps) {
-  const currentGoal = useAppStore((state) => state.currentGoal);
+  const currentGoal = useSelectedGoal();
   const {
     inputText,
     activeTab,
@@ -58,7 +58,7 @@ export function ActionModal({ visible, onClose }: ActionModalProps) {
             <TabNavigation
               activeTab={activeTab}
               onTabChange={setActiveTab}
-              goalImageUri={currentGoal.uri}
+              goalImageUri={currentGoal?.uri}
               selectedDate={selectedDate}
               getDateDisplayText={getDateDisplayText}
               people={MOCK_PEOPLE}

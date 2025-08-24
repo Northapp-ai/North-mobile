@@ -3,7 +3,7 @@ import ToDoItem from "./ToDoItem";
 import { AntDesign } from "@expo/vector-icons";
 import { ToDoItemType } from "./Item.types";
 import { useState } from "react";
-import { ActionModal } from "./ActionModal/index.ts";
+import { ActionModal } from "./ActionModal/ActionModal";
 
 type Props = {
   title: string;
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 10,
     marginTop: 20,
+    minHeight: 100,
   },
   headerContainer: {
     display: "flex",

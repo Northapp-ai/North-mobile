@@ -15,6 +15,7 @@ const initialState: GoalStore = {
   updateGoal: (dataGoal: Goal) => {},
   setGoalSelectedId: (id: string) => {},
   addActionToSelectedGoal: (action: GoalAction) => {},
+  toggleActionCompletion: (goalId: string, actionId: string) => {},
 };
 
 export const useGoalStore: StateCreator<GoalStore> = (set) => ({
@@ -65,6 +66,24 @@ export const useGoalStore: StateCreator<GoalStore> = (set) => ({
           ...goal,
           actions: [...(goal.actions || []), action],
         };
+        const goals = state.goals.map((g) =>
+          g.id === updatedGoal.id ? updatedGoal : g
+        );
+        return { ...state, goals };
+      }
+      return state;
+    });
+  },
+  toggleActionCompletion(goalId: string, actionId: string) {
+    set((state) => {
+      const goal = state.goals.find((goal) => goal.id === goalId);
+      if (goal) {
+        const updatedActions = goal.actions.map((action) =>
+          action.id === actionId
+            ? { ...action, completed: !action.completed }
+            : action
+        );
+        const updatedGoal = { ...goal, actions: updatedActions };
         const goals = state.goals.map((g) =>
           g.id === updatedGoal.id ? updatedGoal : g
         );

@@ -11,20 +11,18 @@ import ToDoContainer from "./_components/ToDoContainer";
 import { ToDoItemType } from "./_components/Item.types";
 import { useSelectedGoal } from "../store/hooks/useGoalSelectors";
 
-const today: ToDoItemType[] = [
-  { title: "Share North profile with Rachel", hour: "18.00" },
-  { title: "Share North profile with Rachel test", hour: "18.00" },
-  { title: "Share North profile with Rachel", hour: "18.00" },
-];
-
 export default function GoalDetails() {
   const currentGoal = useSelectedGoal();
+
   const actions = (currentGoal?.actions ?? []).map((action) => ({
+    id: action.id,
+    goalId: currentGoal?.id,
     title: action.description,
     hour: action.date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     }),
+    completed: action.completed,
   })) as ToDoItemType[];
 
   return (

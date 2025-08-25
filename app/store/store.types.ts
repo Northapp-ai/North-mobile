@@ -24,6 +24,7 @@ export type GoalActions = {
   addGoal: (goal: Goal) => void;
   updateGoal: (dataGoal: Goal) => void;
   addActionToSelectedGoal: (action: GoalAction) => void;
+  toggleActionCompletion: (goalId: string, actionId: string) => void;
 };
 
 export type GoalStore = {

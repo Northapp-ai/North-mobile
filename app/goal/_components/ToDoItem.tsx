@@ -1,21 +1,59 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { ToDoItemType } from "./Item.types";
 import { useAppStore } from "@/app/store";
+import { useEffect, useState } from "react";
+import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
 
-export default function ToDoItem({ title, hour }: ToDoItemType) {
-  const currentGoal = useAppStore((state) => state.currentGoal);
+export default function ToDoItem({
+  id,
+  goalId,
+  title,
+  hour,
+  completed = false,
+}: ToDoItemType) {
+  const currentGoal = useSelectedGoal();
+  const [isCompleted, setIsCompleted] = useState(completed);
+  const toggleActionCompletion = useAppStore(
+    (state) => state.toggleActionCompletion
+  );
+
+  console.log("current goal => ", currentGoal);
+  const handleToggleComplete = () => {
+    toggleActionCompletion(goalId, id);
+  };
+
+  useEffect(() => {
+    setIsCompleted(completed);
+  }, [completed]);
+
   return (
     <View style={styles.container}>
-      <Image source={{ uri: currentGoal.uri }} style={styles.image} />
+      {/* Image container with TouchableOpacity overlay */}
+      <TouchableOpacity
+        style={[
+          styles.imageContainer,
+          isCompleted && styles.completedContainer,
+        ]}
+        onPress={handleToggleComplete}
+        activeOpacity={0.7}
+      >
+        {/* Checkbox overlay */}
+        <View style={styles.checkboxOverlay}>
+          <View
+            style={[
+              styles.checkbox,
+              isCompleted ? styles.checkedBox : styles.uncheckedBox,
+            ]}
+          >
+            {isCompleted && <Text style={styles.checkmark}>✓</Text>}
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      {/* Content container for text */}
       <View style={styles.contentContainer}>
-        <View style={styles.info}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.hour}>{hour}</Text>
-        </View>
-        <View style={styles.avatarContainer}>
-          <Ionicons name="person-outline" size={20} />
-        </View>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.hour}>{hour}</Text>
       </View>
     </View>
   );
@@ -23,46 +61,88 @@ export default function ToDoItem({ title, hour }: ToDoItemType) {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 72,
+    minHeight: 56,
     borderRadius: 16,
     backgroundColor: "#F0F0F0",
     display: "flex",
     flexDirection: "row",
     paddingRight: 20,
     maxWidth: "100%",
-  },
-  info: {
-    width: "85%",
-  },
-  title: {
-    fontFamily: "Ubuntu_400Regular",
-    fontSize: 16,
-    flexWrap: "wrap",
-  },
-  hour: {
-    fontFamily: "SourceSans3_400Regular",
-    color: "#A6A69F",
-  },
-  avatarContainer: {
-    width: 30,
-    height: 30,
-    borderRadius: 30,
-    backgroundColor: "#ddd",
-    justifyContent: "center",
     alignItems: "center",
+  },
+  completedContainer: {
+    opacity: 0.95,
+  },
+  imageContainer: {
+    position: "relative",
+    width: "20%",
+    marginRight: 10,
+    height: 56,
   },
   image: {
     backgroundColor: "gray",
     borderTopLeftRadius: 16,
     borderBottomLeftRadius: 16,
-    width: "20%",
-    marginRight: 10,
+    width: "100%",
+    height: "100%",
+  },
+  completedImage: {
+    opacity: 0.85, // Only slightly dim the image when completed
+  },
+  checkboxOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 1,
+  },
+  checkbox: {
+    width: 50,
+    height: 55,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1.5,
+  },
+  checkedBox: {
+    width: 50,
+    height: 55,
+    borderRadius: 16,
+    backgroundColor: "#4CAF50", // Green checkmark
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  uncheckedBox: {
+    width: 50,
+    height: 55,
+    borderRadius: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderWidth: 1.5,
+    borderColor: "#CCC",
+  },
+  checkmark: {
+    color: "#ffffff",
+    fontSize: 25,
+    fontWeight: "bold",
   },
   contentContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    maxWidth: "85%",
+    flex: 1,
+    justifyContent: "center",
+    paddingVertical: 8,
+  },
+  title: {
+    fontFamily: "Ubuntu_400Regular",
+    fontSize: 16,
+    flexWrap: "wrap",
+    marginBottom: 2,
+  },
+  hour: {
+    fontFamily: "SourceSans3_400Regular",
+    color: "#A6A69F",
+    fontSize: 14,
   },
 });

@@ -25,7 +25,16 @@ export default function ToDoContainer({ title, items }: Props) {
         <Text style={styles.title}>{title}</Text>
       </View>
       {items.map((item, index) => {
-        return <ToDoItem title={item.title} hour={item.hour} key={index} />;
+        return (
+          <ToDoItem
+            key={item.id || index}
+            id={item.id}
+            goalId={item.goalId}
+            title={item.title}
+            hour={item.hour}
+            completed={item.completed}
+          />
+        );
       })}
       <ActionModal
         visible={isActionModalVisible}

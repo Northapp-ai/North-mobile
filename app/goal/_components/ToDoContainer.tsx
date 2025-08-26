@@ -6,7 +6,7 @@ import { ActionModal } from "./ActionModal/ActionModal";
 import { GoalAction } from "@/app/auth/models/types";
 
 type Props = {
-  title: string;
+  title?: string;
   items: GoalAction[];
 };
 
@@ -14,16 +14,18 @@ export default function ToDoContainer({ title, items }: Props) {
   const [isActionModalVisible, setIsActionModalVisible] = useState(false);
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Pressable
-          onPress={() => {
-            setIsActionModalVisible(true);
-          }}
-        >
-          <AntDesign name="plus" size={24} color="black" />
-        </Pressable>
-        <Text style={styles.title}>{title}</Text>
-      </View>
+      {title ? (
+        <View style={styles.headerContainer}>
+          <Pressable
+            onPress={() => {
+              setIsActionModalVisible(true);
+            }}
+          >
+            <AntDesign name="plus" size={24} color="black" />
+          </Pressable>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+      ) : null}
       {items.map((item, index) => {
         return <ToDoItem key={item.id || index} {...item} />;
       })}

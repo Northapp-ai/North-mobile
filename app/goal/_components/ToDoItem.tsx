@@ -1,8 +1,6 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { ToDoItemType } from "./Item.types";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useAppStore } from "@/app/store";
 import { useEffect, useState } from "react";
-import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
 import { GoalAction } from "@/app/auth/models/types";
 
 export default function ToDoItem({
@@ -12,7 +10,6 @@ export default function ToDoItem({
   date,
   completed,
 }: GoalAction) {
-  const currentGoal = useSelectedGoal();
   const [isCompleted, setIsCompleted] = useState(completed);
   const toggleActionCompletion = useAppStore(
     (state) => state.toggleActionCompletion

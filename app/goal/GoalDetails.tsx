@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useState } from "react";
 import TabsNavigation from "../components/TabsNavigation";
 import ToDoContainer from "./_components/ToDoContainer";
 import { useSelectedGoal } from "../store/hooks/useGoalSelectors";
@@ -13,7 +14,30 @@ import useGroupActions from "./_hooks/useGroupActions";
 
 export default function GoalDetails() {
   const currentGoal = useSelectedGoal();
-  const { todayActions, tomorrowActions, upcomingActions } = useGroupActions();
+  const {
+    todayActions,
+    tomorrowActions,
+    upcomingActions,
+    completedActions,
+    totalTodoCount,
+    totalDoneCount,
+  } = useGroupActions();
+
+  const [activeTab, setActiveTab] = useState("TO DO");
+
+  const handleTabPress = (tab: string) => {
+    setActiveTab(tab);
+  };
+
+  const renderTodoContainers = () => (
+    <>
+      <ToDoContainer title="TODAY" items={todayActions} />
+      <ToDoContainer title="TOMORROW" items={tomorrowActions} />
+      <ToDoContainer title="UPCOMING" items={upcomingActions} />
+    </>
+  );
+
+  const renderDoneContainers = () => <ToDoContainer items={completedActions} />;
 
   return (
     <ScrollView style={styles.mainContainer}>
@@ -31,10 +55,21 @@ export default function GoalDetails() {
           </View>
         </View>
       </View>
-      <TabsNavigation items={["TO DO", "DONE", "PARTNER"]} />
-      <ToDoContainer title="TODAY" items={todayActions} />
-      <ToDoContainer title="TOMORROW" items={tomorrowActions} />
-      <ToDoContainer title="UPCOMING" items={upcomingActions} />
+      <TabsNavigation
+        items={["TO DO", "DONE", "PARTNER"]}
+        activeTab={activeTab}
+        onTabPress={handleTabPress}
+        counts={[totalTodoCount, totalDoneCount, 0]}
+      />
+      {activeTab === "TO DO" && renderTodoContainers()}
+      {activeTab === "DONE" && renderDoneContainers()}
+      {activeTab === "PARTNER" && (
+        <View style={styles.placeholderContainer}>
+          <Text style={styles.placeholderText}>
+            Partner functionality coming soon
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -78,5 +113,16 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_600SemiBold",
     fontSize: 16,
     fontWeight: "600",
+  },
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 50,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: "#999",
+    fontFamily: "Ubuntu_400Regular",
   },
 });

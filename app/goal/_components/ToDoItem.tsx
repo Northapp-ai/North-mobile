@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useAppStore } from "@/app/store";
 import { useEffect, useState } from "react";
 import { GoalAction } from "@/app/auth/models/types";
@@ -9,6 +9,7 @@ export default function ToDoItem({
   description,
   date,
   completed,
+  user,
 }: GoalAction) {
   const [isCompleted, setIsCompleted] = useState(completed);
   const toggleActionCompletion = useAppStore(
@@ -25,25 +26,22 @@ export default function ToDoItem({
 
   return (
     <View style={styles.container}>
-      {/* Image container with TouchableOpacity overlay */}
+      {/* Checkbox container */}
       <TouchableOpacity
         style={[
-          styles.imageContainer,
+          styles.checkboxContainer,
           isCompleted && styles.completedContainer,
         ]}
         onPress={handleToggleComplete}
         activeOpacity={0.7}
       >
-        {/* Checkbox overlay */}
-        <View style={styles.checkboxOverlay}>
-          <View
-            style={[
-              styles.checkbox,
-              isCompleted ? styles.checkedBox : styles.uncheckedBox,
-            ]}
-          >
-            {isCompleted && <Text style={styles.checkmark}>✓</Text>}
-          </View>
+        <View
+          style={[
+            styles.checkbox,
+            isCompleted ? styles.checkedBox : styles.uncheckedBox,
+          ]}
+        >
+          {isCompleted && <Text style={styles.checkmark}>✓</Text>}
         </View>
       </TouchableOpacity>
 
@@ -57,6 +55,18 @@ export default function ToDoItem({
           })}
         </Text>
       </View>
+
+      {/* User profile photo on the right */}
+      <View style={styles.userPhotoContainer}>
+        <Image
+          source={{
+            uri:
+              user.profilePhoto ||
+              "https://via.placeholder.com/56x56?text=User",
+          }}
+          style={[styles.userPhoto, isCompleted && styles.completedImage]}
+        />
+      </View>
     </View>
   );
 }
@@ -68,34 +78,33 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     display: "flex",
     flexDirection: "row",
-    paddingRight: 20,
+    paddingHorizontal: 15,
     maxWidth: "100%",
     alignItems: "center",
   },
   completedContainer: {
     opacity: 0.95,
   },
-  imageContainer: {
-    position: "relative",
-    width: "20%",
+  checkboxContainer: {
     marginRight: 10,
     height: 56,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  image: {
-    backgroundColor: "gray",
-    borderTopLeftRadius: 16,
-    borderBottomLeftRadius: 16,
-    width: "100%",
-    height: "100%",
+  userPhotoContainer: {
+    marginLeft: 10,
+    height: 56,
+    width: 48,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  userPhoto: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
   },
   completedImage: {
     opacity: 0.85, // Only slightly dim the image when completed
-  },
-  checkboxOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: 1,
   },
   checkbox: {
     width: 50,
@@ -103,15 +112,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1.5,
   },
   checkedBox: {
-    width: 50,
-    height: 55,
-    borderRadius: 16,
-    backgroundColor: "#000", // Green checkmark
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#000",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
@@ -119,9 +122,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   uncheckedBox: {
-    width: 50,
-    height: 55,
-    borderRadius: 16,
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderWidth: 1.5,
     borderColor: "#CCC",

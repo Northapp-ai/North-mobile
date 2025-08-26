@@ -1,19 +1,20 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { WhoTabContent } from "./WhoTabContent";
-import { TabType, Person } from "./types";
+import { TabType } from "./types";
+import { User } from "@/app/auth/models/types";
 
 interface TabContentSectionProps {
   activeTab: TabType;
-  people: Person[];
-  selectedPersonId: string | null;
-  onPersonSelect: (personId: string) => void;
+  people: User[];
+  selectedPersonEmail: string | null;
+  onPersonSelect: (personEmail: string) => void;
 }
 
 export function TabContentSection({
   activeTab,
   people,
-  selectedPersonId,
+  selectedPersonEmail,
   onPersonSelect,
 }: TabContentSectionProps) {
   switch (activeTab) {
@@ -35,7 +36,7 @@ export function TabContentSection({
       return (
         <WhoTabContent
           people={people}
-          selectedPersonId={selectedPersonId}
+          selectedPersonEmail={selectedPersonEmail}
           onPersonSelect={onPersonSelect}
         />
       );

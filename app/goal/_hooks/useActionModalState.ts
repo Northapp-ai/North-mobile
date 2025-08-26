@@ -2,22 +2,22 @@ import { useState, useCallback } from "react";
 import { TabType, ActionModalState } from "../_components/ActionModal/types";
 import {
   DEFAULT_TAB,
-  DEFAULT_PERSON_ID,
+  DEFAULT_PERSON_EMAIL,
 } from "../_components/ActionModal/constants";
 
 export function useActionModalState() {
   const [inputText, setInputText] = useState("");
   const [activeTab, setActiveTab] = useState<TabType>(DEFAULT_TAB);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedPersonId, setSelectedPersonId] = useState<string | null>(
-    DEFAULT_PERSON_ID
+  const [selectedPersonEmail, setSelectedPersonEmail] = useState<string | null>(
+    DEFAULT_PERSON_EMAIL
   );
 
   const resetModalState = useCallback(() => {
     setInputText("");
     setActiveTab(DEFAULT_TAB);
     setSelectedDate(new Date());
-    setSelectedPersonId(DEFAULT_PERSON_ID);
+    setSelectedPersonEmail(DEFAULT_PERSON_EMAIL);
   }, []);
 
   const handleDateConfirm = useCallback((event: any, date?: Date) => {
@@ -55,11 +55,11 @@ export function useActionModalState() {
     inputText,
     activeTab,
     selectedDate,
-    selectedPersonId,
+    selectedPersonEmail,
     // Setters
     setInputText,
     setActiveTab,
-    setSelectedPersonId,
+    setSelectedPersonEmail,
     // Handlers
     resetModalState,
     handleDateConfirm,

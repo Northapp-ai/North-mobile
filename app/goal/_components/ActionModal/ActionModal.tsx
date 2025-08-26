@@ -18,9 +18,11 @@ import { DateTimePickerComponent } from "./DateTimePickerComponent";
 import { GoalAction, User } from "@/app/auth/models/types";
 import { useAppStore } from "@/app/store";
 import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
+import { useAllUsers } from "@/app/store/hooks/useUserSelectors";
 
 export function ActionModal({ visible, onClose }: ActionModalProps) {
   const currentGoal = useSelectedGoal();
+  const allUsers = useAllUsers();
   const addActionToSelectedGoal = useAppStore(
     (state) => state.addActionToSelectedGoal
   );
@@ -28,10 +30,10 @@ export function ActionModal({ visible, onClose }: ActionModalProps) {
     inputText,
     activeTab,
     selectedDate,
-    selectedPersonId,
+    selectedPersonEmail,
     setInputText,
     setActiveTab,
-    setSelectedPersonId,
+    setSelectedPersonEmail,
     resetModalState,
     handleDateConfirm,
     getDateDisplayText,
@@ -50,7 +52,9 @@ export function ActionModal({ visible, onClose }: ActionModalProps) {
       description: inputText,
       completed: false,
       date: selectedDate,
-      user: {} as User,
+      user: allUsers.find(
+        (user: User) => user.email === selectedPersonEmail
+      ) as User,
       goalId: currentGoal?.id ?? "",
     };
     addActionToSelectedGoal(action);
@@ -85,8 +89,8 @@ export function ActionModal({ visible, onClose }: ActionModalProps) {
               <TabContentSection
                 activeTab={activeTab}
                 people={MOCK_PEOPLE}
-                selectedPersonId={selectedPersonId}
-                onPersonSelect={setSelectedPersonId}
+                selectedPersonEmail={selectedPersonEmail}
+                onPersonSelect={setSelectedPersonEmail}
               />
             </View>
 

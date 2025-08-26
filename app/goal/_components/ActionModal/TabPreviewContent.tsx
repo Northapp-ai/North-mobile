@@ -2,14 +2,15 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { WhyTabContent } from "./WhyTabContent";
 import { WhenTabContent } from "./WhenTabContent";
-import { TabType, Person } from "./types";
+import { TabType } from "./types";
+import { User } from "@/app/auth/models/types";
 
 interface TabPreviewContentProps {
   tab: TabType;
   goalImageUri?: string;
   selectedDate: Date;
   getDateDisplayText: () => string;
-  people: Person[];
+  people: User[];
 }
 
 export function TabPreviewContent({
@@ -34,7 +35,10 @@ export function TabPreviewContent({
     case "WHO":
       return (
         <TouchableOpacity style={styles.personContainer}>
-          <Image source={{ uri: people[0].uri }} style={styles.personImage} />
+          <Image
+            source={{ uri: people[0].profilePhoto }}
+            style={styles.personImage}
+          />
           <Text style={styles.personName}>{people[0].name}</Text>
         </TouchableOpacity>
       );

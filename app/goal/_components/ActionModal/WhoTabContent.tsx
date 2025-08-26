@@ -1,3 +1,4 @@
+import { User } from "@/app/auth/models/types";
 import React from "react";
 import {
   View,
@@ -8,21 +9,15 @@ import {
   StyleSheet,
 } from "react-native";
 
-type Person = {
-  id: string;
-  name: string;
-  uri: string;
-};
-
 type Props = {
-  people: Person[];
-  selectedPersonId: string | null;
-  onPersonSelect: (personId: string) => void;
+  people: User[];
+  selectedPersonEmail: string | null;
+  onPersonSelect: (personEmail: string) => void;
 };
 
 export function WhoTabContent({
   people,
-  selectedPersonId,
+  selectedPersonEmail,
   onPersonSelect,
 }: Props) {
   return (
@@ -37,13 +32,13 @@ export function WhoTabContent({
           <TouchableOpacity
             key={person.id}
             style={[styles.personContainer]}
-            onPress={() => onPersonSelect(person.id)}
+            onPress={() => onPersonSelect(person.email)}
           >
             <Image
-              source={{ uri: person.uri }}
+              source={{ uri: person.profilePhoto }}
               style={[
                 styles.personImage,
-                selectedPersonId === person.id && styles.selectedPerson,
+                selectedPersonEmail === person.email && styles.selectedPerson,
               ]}
             />
             <Text style={styles.personName}>{person.name}</Text>

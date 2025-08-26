@@ -1,29 +1,21 @@
-export type TabType = "WHY" | "WHEN" | "WHO";
+import { User } from "@/app/auth/models/types";
 
-export type Person = {
-  id: string;
-  name: string;
-  uri: string;
-};
+export type TabType = "WHY" | "WHEN" | "WHO";
 
 export interface ActionModalProps {
   visible: boolean;
   onClose: () => void;
 }
 
-export interface TabContentProps {
-  activeTab: TabType;
-  selectedDate: Date;
-  selectedPersonId: string | null;
-  people: Person[];
-  goalImageUri?: string;
-  getDateDisplayText: () => string;
-  onPersonSelect: (personId: string) => void;
+export interface WhoTabContentProps {
+  people: User[];
+  selectedPersonEmail: string | null;
+  onPersonSelect: (personEmail: string) => void;
 }
 
 export interface ActionModalState {
   inputText: string;
   activeTab: TabType;
   selectedDate: Date;
-  selectedPersonId: string | null;
+  selectedPersonEmail: string | null;
 }

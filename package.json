@@ -61,7 +61,7 @@
     "react-native-webview": "13.13.5",
     "zod": "^3.24.2",
     "zustand": "^5.0.3",
-    "expo-dev-client": "~5.1.8"
+    "expo-crypto": "~14.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

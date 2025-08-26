@@ -1,4 +1,5 @@
 export type User = {
+  id?: string;
   name: string;
   lastName: string;
   email: string;
@@ -17,4 +18,14 @@ export type Goal = {
   name: string;
   uri: string;
   dueDate: Date;
+  actions: GoalAction[];
+};
+
+export type GoalAction = {
+  id: string;
+  goalId: string;
+  description: string;
+  completed: boolean;
+  date: Date;
+  user: User;
 };

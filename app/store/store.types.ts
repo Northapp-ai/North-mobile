@@ -1,4 +1,4 @@
-import { Goal, User } from "@/app/auth/models/types";
+import { Goal, GoalAction, User } from "@/app/auth/models/types";
 
 export type AuthStore = {
   isAuthenticated: boolean;
@@ -19,14 +19,18 @@ export type GoalActions = {
   resetCurrentGoal: () => void;
   updateCurrentStep: (step: StepGoal) => void;
   addCurrentGoal: (goal: Goal) => void;
+  setGoalSelectedId: (id: string) => void;
   updateCurrentGoal: (dataGoal: Goal) => void;
   addGoal: (goal: Goal) => void;
   updateGoal: (dataGoal: Goal) => void;
+  addActionToSelectedGoal: (action: GoalAction) => void;
+  toggleActionCompletion: (goalId: string, actionId: string) => void;
 };
 
 export type GoalStore = {
   currentStep: StepGoal;
   goals: Goal[];
+  goalSelectedId: string;
   currentGoal: Partial<Goal>;
 } & GoalActions;
 

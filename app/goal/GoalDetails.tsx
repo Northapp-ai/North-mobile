@@ -6,38 +6,70 @@ import {
   Text,
   View,
 } from "react-native";
-import { useAppStore } from "../store";
+import { useState } from "react";
 import TabsNavigation from "../components/TabsNavigation";
 import ToDoContainer from "./_components/ToDoContainer";
-import { ToDoItemType } from "./_components/Item.types";
-
-const today: ToDoItemType[] = [
-  { title: "Share North profile with Rachel", hour: "18.00" },
-  { title: "Share North profile with Rachel test", hour: "18.00" },
-  { title: "Share North profile with Rachel", hour: "18.00" },
-];
+import { useSelectedGoal } from "../store/hooks/useGoalSelectors";
+import useGroupActions from "./_hooks/useGroupActions";
 
 export default function GoalDetails() {
-  const currentGoal = useAppStore((state) => state.currentGoal);
+  const currentGoal = useSelectedGoal();
+  const {
+    todayActions,
+    tomorrowActions,
+    upcomingActions,
+    completedActions,
+    totalTodoCount,
+    totalDoneCount,
+  } = useGroupActions();
+
+  const [activeTab, setActiveTab] = useState("TO DO");
+
+  const handleTabPress = (tab: string) => {
+    setActiveTab(tab);
+  };
+
+  const renderTodoContainers = () => (
+    <>
+      <ToDoContainer title="TODAY" items={todayActions} />
+      <ToDoContainer title="TOMORROW" items={tomorrowActions} />
+      <ToDoContainer title="UPCOMING" items={upcomingActions} />
+    </>
+  );
+
+  const renderDoneContainers = () => <ToDoContainer items={completedActions} />;
+
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: currentGoal.uri }} style={styles.image} />
+          <Image source={{ uri: currentGoal?.uri }} style={styles.image} />
           <View style={styles.footerOverlay}>
             <Text
               style={styles.footerText}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {currentGoal.name}
+              {currentGoal?.name}
             </Text>
           </View>
         </View>
       </View>
-      <TabsNavigation items={["TO DO", "DONE", "PARTNER"]} />
-      <ToDoContainer title="TODAY" items={today} />
-      <ToDoContainer title="TOMORROW" items={[]} />
+      <TabsNavigation
+        items={["TO DO", "DONE", "PARTNER"]}
+        activeTab={activeTab}
+        onTabPress={handleTabPress}
+        counts={[totalTodoCount, totalDoneCount, 0]}
+      />
+      {activeTab === "TO DO" && renderTodoContainers()}
+      {activeTab === "DONE" && renderDoneContainers()}
+      {activeTab === "PARTNER" && (
+        <View style={styles.placeholderContainer}>
+          <Text style={styles.placeholderText}>
+            Partner functionality coming soon
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -81,5 +113,16 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_600SemiBold",
     fontSize: 16,
     fontWeight: "600",
+  },
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 50,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: "#999",
+    fontFamily: "Ubuntu_400Regular",
   },
 });

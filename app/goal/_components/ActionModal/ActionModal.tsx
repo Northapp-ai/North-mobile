@@ -15,9 +15,9 @@ import { TabNavigation } from "./TabNavigation";
 import { TabContentSection } from "./TabContentSection";
 import { InputSection } from "./InputSection";
 import { DateTimePickerComponent } from "./DateTimePickerComponent";
-import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
 import { GoalAction, User } from "@/app/auth/models/types";
 import { useAppStore } from "@/app/store";
+import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
 
 export function ActionModal({ visible, onClose }: ActionModalProps) {
   const currentGoal = useSelectedGoal();
@@ -51,6 +51,7 @@ export function ActionModal({ visible, onClose }: ActionModalProps) {
       completed: false,
       date: selectedDate,
       user: {} as User,
+      goalId: currentGoal?.id ?? "",
     };
     addActionToSelectedGoal(action);
     handleClose();

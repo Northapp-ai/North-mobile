@@ -3,21 +3,21 @@ import { ToDoItemType } from "./Item.types";
 import { useAppStore } from "@/app/store";
 import { useEffect, useState } from "react";
 import { useSelectedGoal } from "@/app/store/hooks/useGoalSelectors";
+import { GoalAction } from "@/app/auth/models/types";
 
 export default function ToDoItem({
   id,
   goalId,
-  title,
-  hour,
-  completed = false,
-}: ToDoItemType) {
+  description,
+  date,
+  completed,
+}: GoalAction) {
   const currentGoal = useSelectedGoal();
   const [isCompleted, setIsCompleted] = useState(completed);
   const toggleActionCompletion = useAppStore(
     (state) => state.toggleActionCompletion
   );
 
-  console.log("current goal => ", currentGoal);
   const handleToggleComplete = () => {
     toggleActionCompletion(goalId, id);
   };
@@ -52,8 +52,13 @@ export default function ToDoItem({
 
       {/* Content container for text */}
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.hour}>{hour}</Text>
+        <Text style={styles.title}>{description}</Text>
+        <Text style={styles.hour}>
+          {date.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </Text>
       </View>
     </View>
   );
@@ -107,7 +112,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 55,
     borderRadius: 16,
-    backgroundColor: "#4CAF50", // Green checkmark
+    backgroundColor: "#000", // Green checkmark
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",

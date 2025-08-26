@@ -22,6 +22,7 @@ export type Goal = {
 
 export type GoalAction = {
   id: string;
+  goalId: string;
   description: string;
   completed: boolean;
   date: Date;

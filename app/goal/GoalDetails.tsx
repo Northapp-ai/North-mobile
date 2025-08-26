@@ -8,22 +8,12 @@ import {
 } from "react-native";
 import TabsNavigation from "../components/TabsNavigation";
 import ToDoContainer from "./_components/ToDoContainer";
-import { ToDoItemType } from "./_components/Item.types";
 import { useSelectedGoal } from "../store/hooks/useGoalSelectors";
+import useGroupActions from "./_hooks/useGroupActions";
 
 export default function GoalDetails() {
   const currentGoal = useSelectedGoal();
-
-  const actions = (currentGoal?.actions ?? []).map((action) => ({
-    id: action.id,
-    goalId: currentGoal?.id,
-    title: action.description,
-    hour: action.date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    completed: action.completed,
-  })) as ToDoItemType[];
+  const { todayActions, tomorrowActions, upcomingActions } = useGroupActions();
 
   return (
     <ScrollView style={styles.mainContainer}>
@@ -42,8 +32,9 @@ export default function GoalDetails() {
         </View>
       </View>
       <TabsNavigation items={["TO DO", "DONE", "PARTNER"]} />
-      <ToDoContainer title="TODAY" items={actions} />
-      <ToDoContainer title="TOMORROW" items={[]} />
+      <ToDoContainer title="TODAY" items={todayActions} />
+      <ToDoContainer title="TOMORROW" items={tomorrowActions} />
+      <ToDoContainer title="UPCOMING" items={upcomingActions} />
     </ScrollView>
   );
 }

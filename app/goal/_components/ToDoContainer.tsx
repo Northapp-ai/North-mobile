@@ -1,13 +1,13 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import ToDoItem from "./ToDoItem";
 import { AntDesign } from "@expo/vector-icons";
-import { ToDoItemType } from "./Item.types";
 import { useState } from "react";
 import { ActionModal } from "./ActionModal/ActionModal";
+import { GoalAction } from "@/app/auth/models/types";
 
 type Props = {
   title: string;
-  items: ToDoItemType[];
+  items: GoalAction[];
 };
 
 export default function ToDoContainer({ title, items }: Props) {
@@ -25,16 +25,7 @@ export default function ToDoContainer({ title, items }: Props) {
         <Text style={styles.title}>{title}</Text>
       </View>
       {items.map((item, index) => {
-        return (
-          <ToDoItem
-            key={item.id || index}
-            id={item.id}
-            goalId={item.goalId}
-            title={item.title}
-            hour={item.hour}
-            completed={item.completed}
-          />
-        );
+        return <ToDoItem key={item.id || index} {...item} />;
       })}
       <ActionModal
         visible={isActionModalVisible}
